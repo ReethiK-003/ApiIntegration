@@ -3,20 +3,15 @@ package com.apiintegration.core.service;
 import java.security.SecureRandom;
 import java.util.Date;
 import java.util.Objects;
-
 import javax.transaction.Transactional;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
 import com.apiintegration.core.exception.EntryNotFoundException;
 import com.apiintegration.core.exception.InvalidTokenException;
 import com.apiintegration.core.model.Token;
 import com.apiintegration.core.model.User;
 import com.apiintegration.core.repo.TokenRepo;
-import com.apiintegration.core.request.InviteUserRequest;
-import com.apiintegration.core.service.UserService;
 import com.apiintegration.core.utils.AccountInviteToken;
 import com.apiintegration.core.utils.ConfirmEmailToken;
 import com.apiintegration.core.utils.ResetPasswordToken;

@@ -2,9 +2,6 @@ package com.apiintegration.core.model.service;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

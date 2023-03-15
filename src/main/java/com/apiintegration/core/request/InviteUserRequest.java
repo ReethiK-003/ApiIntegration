@@ -2,16 +2,9 @@ package com.apiintegration.core.request;
 
 import java.util.LinkedList;
 import java.util.List;
-
 import org.springframework.stereotype.Service;
-
-import com.apiintegration.core.model.Account;
-import com.apiintegration.core.model.Project;
-import com.apiintegration.core.utils.UserRole;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

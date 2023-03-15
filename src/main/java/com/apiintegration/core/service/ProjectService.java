@@ -1,20 +1,13 @@
 package com.apiintegration.core.service;
 
 import java.util.List;
-
 import javax.transaction.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.apiintegration.core.exception.DuplicateEntryException;
 import com.apiintegration.core.model.Account;
 import com.apiintegration.core.model.Project;
 import com.apiintegration.core.model.RelUserProject;
 import com.apiintegration.core.model.User;
 import com.apiintegration.core.repo.ProjectRepo;
-import com.apiintegration.core.repo.RelUserProjectRepo;
-import com.apiintegration.core.request.AddProjectToUserRequest;
 import com.apiintegration.core.request.CreateProjectRequest;
 
 import lombok.RequiredArgsConstructor;

@@ -2,10 +2,7 @@ package com.apiintegration.core.repo;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.CrudRepository;
-
 import com.apiintegration.core.model.Api;
 
 public interface ApiRepo extends JpaRepository<Api, Long>{

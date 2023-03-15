@@ -3,14 +3,11 @@ package com.apiintegration.core.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.apiintegration.core.exception.DuplicateEntryException;
 import com.apiintegration.core.exception.InvalidTokenException;
 import com.apiintegration.core.model.User;
 import com.apiintegration.core.model.UserVisits;
@@ -23,7 +20,6 @@ import com.apiintegration.core.response.IResponse;
 import com.apiintegration.core.service.TokenService;
 import com.apiintegration.core.service.UserService;
 import com.apiintegration.core.utils.TokenTypes;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

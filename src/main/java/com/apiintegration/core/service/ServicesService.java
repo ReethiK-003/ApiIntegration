@@ -1,11 +1,7 @@
 package com.apiintegration.core.service;
 
-import java.net.URI;
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.apiintegration.core.exception.DuplicateEntryException;
 import com.apiintegration.core.exception.EntryNotFoundException;
 import com.apiintegration.core.model.Project;
@@ -15,7 +11,6 @@ import com.apiintegration.core.request.CreateServicesRequest;
 import com.apiintegration.core.request.UpdateServicesRequest;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor

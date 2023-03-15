@@ -1,34 +1,17 @@
 package com.apiintegration.core.service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import javax.transaction.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.apiintegration.core.exception.DuplicateEntryException;
-import com.apiintegration.core.exception.InvalidTokenException;
 import com.apiintegration.core.model.Account;
-import com.apiintegration.core.model.Project;
-import com.apiintegration.core.model.RelUserProject;
-import com.apiintegration.core.model.Token;
 import com.apiintegration.core.model.User;
 import com.apiintegration.core.repo.AccountRepo;
-import com.apiintegration.core.repo.RelUserProjectRepo;
-import com.apiintegration.core.repo.UserRepo;
 import com.apiintegration.core.request.AddProjectToUserRequest;
 import com.apiintegration.core.request.CreateAccountRequest;
 import com.apiintegration.core.request.InviteUserRequest;
-import com.apiintegration.core.utils.TokenTypes;
 import com.apiintegration.core.utils.UserRole;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 
