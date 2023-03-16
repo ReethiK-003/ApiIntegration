@@ -2,17 +2,13 @@ package com.apiintegration.core.service;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import com.apiintegration.core.mail.Mail;
 import com.apiintegration.core.mail.SendMail;
 import com.apiintegration.core.model.Token;
 import com.apiintegration.core.model.User;
-import com.apiintegration.core.request.InviteUserRequest;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

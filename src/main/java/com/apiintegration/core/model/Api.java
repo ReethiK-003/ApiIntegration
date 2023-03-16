@@ -1,10 +1,7 @@
 package com.apiintegration.core.model;
 
-import java.net.URL;
 import java.sql.Timestamp;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -13,18 +10,14 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
-
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
 import com.apiintegration.core.model.service.HashMapToDbJsonConverter;
 import com.apiintegration.core.model.service.ObjectToDbJsonConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

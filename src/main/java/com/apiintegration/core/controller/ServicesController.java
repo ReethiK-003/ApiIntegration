@@ -2,7 +2,6 @@ package com.apiintegration.core.controller;
 
 import java.util.List;
 import javax.validation.Valid;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,9 +9,7 @@ import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.apiintegration.core.exception.NoDataFoundException;
-import com.apiintegration.core.model.Project;
 import com.apiintegration.core.model.Services;
 import com.apiintegration.core.model.User;
 import com.apiintegration.core.request.CreateServicesRequest;
