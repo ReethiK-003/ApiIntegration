@@ -20,6 +20,10 @@ import com.apiintegration.core.response.IResponse;
 import com.apiintegration.core.service.TokenService;
 import com.apiintegration.core.service.UserService;
 import com.apiintegration.core.utils.TokenTypes;
+
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,6 +36,11 @@ public class UserController {
 	private final UserService userService;
 	private final TokenService tokenService;
 
+	@ApiOperation(value = "Create a new user", notes = "Create a new user with the given details")
+	@ApiResponses(value = { 
+	    @ApiResponse(code = 200, message = "User Created Successfully"),
+	    @ApiResponse(code = 400, message = "Email already exists or Bad Request"),
+	    @ApiResponse(code = 500, message = "Internal Server Error !!") })
 	@PostMapping("/signup")
 	public IResponse signup(@Valid @RequestBody SignupRequest signupRequest, HttpServletRequest servletRequest) {
 		try {
