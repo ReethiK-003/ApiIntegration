@@ -6,6 +6,9 @@ target/
 
 # Other Files to be Ignored
 .settings
+.classpath
+.factorypath
+.project
 
 # Compiled class file
 *.class
