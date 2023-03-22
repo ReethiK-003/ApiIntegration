@@ -31,7 +31,7 @@ public class SignupRequest {
 	public CharSequence password;
 	
 	@NotBlank
-	@Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,16}$", message = "Password must ")
+	@Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,16}$", message = "Password must")
 	public CharSequence confirmPassword;
 
 	@AssertTrue(message = "You must accept terms and conditions")

@@ -17,6 +17,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.apiintegration.core.exception.UserNotFoundException;
 import com.apiintegration.core.model.User;
 import com.apiintegration.core.response.BasicResponse;
 import com.apiintegration.core.service.UserService;
@@ -64,7 +65,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 			// if token is valid configure Spring Security to manually set
 			// authentication
-			if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
+			if (jwtTokenUtil.validateToken(jwtToken, userDetails) && userDetails != null) {
 				if (((UserDetailsImpl) userDetails).isSessionValid(jwtTokenUtil.getSessionIdFromToken(jwtToken))) {
 					UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 							userDetails, null, userDetails.getAuthorities());
@@ -73,9 +74,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 					// After setting the Authentication in the context, we specify
 					// that the current user is authenticated. So it passes the
 					// Spring Security Configurations successfully.
-					User user = userService.getUserByEmail(username);
-					request.setAttribute("user", user );
-					SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+					try {
+						User user = userService.getUserByEmail(username);
+						request.setAttribute("user", user);
+						SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+					} catch (UserNotFoundException e) {
+						e.printStackTrace();
+					}
+
 				} else {
 					sendResponse(response, HttpStatus.UNAUTHORIZED, "Your have been logged out of this device.");
 					return;

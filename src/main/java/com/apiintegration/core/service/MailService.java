@@ -29,7 +29,7 @@ public class MailService {
 
 	@Value("${app.url)")
 	private String appUrl;
-	
+
 	@Autowired
 	private final SendMail mailSender;
 
@@ -50,15 +50,15 @@ public class MailService {
 
 			mail.setModel(model);
 
-			System.out.println("2FA code: {}" + token.getToken());
 			mailSender.sendSimpleMessage(mail);
 
+			log.debug("2FA mail sent to {} ,code : {}", user.getUserEmail(), token.getToken());
 		} catch (Exception e) {
 			log.error("Error processing SendTwoFactorEmailEvent!", e);
 		}
 	}
 
-	public void sendVerifyEmailMail(User user , Token token) {
+	public void sendVerifyEmailMail(User user, Token token) {
 		try {
 			Mail mail = new Mail();
 			mail.setFrom(from);
@@ -76,13 +76,14 @@ public class MailService {
 
 			mailSender.sendSimpleMessage(mail);
 
+			log.debug("Verify-email mail sent to {}", user.getUserEmail());
 		} catch (Exception e) {
 			log.error("Error processing SendTwoFactorEmailEvent!", e);
 		}
 
 	}
 
-	public void sendAccountInviteMail(String toEmail ,User user ,Token token) {
+	public void sendAccountInviteMail(String toEmail, User user, Token token) {
 		try {
 			Mail mail = new Mail();
 			mail.setFrom(from);
@@ -100,9 +101,33 @@ public class MailService {
 
 			mailSender.sendSimpleMessage(mail);
 
+			log.debug("Account Invite mail sent to {} by {}", toEmail, user.getUserEmail());
 		} catch (Exception e) {
 			log.error("Error processing SendTwoFactorEmailEvent!", e);
 		}
+	}
 
+	public void sendResetPasswordMail(Token token, User user) {
+		try {
+			Mail mail = new Mail();
+			mail.setFrom(from);
+			mail.setFromPretty(fromPretty);
+			mail.setTo(user.getUserEmail());
+			mail.setSubject("Password Reset Request from APIIntegration");
+			mail.setContent("reset_password.ftl");
+
+			Map<String, String> model = new HashMap();
+			model.put("logoUrl", appLogo);
+			model.put("name", user.getUserEmail());
+			model.put("url", appUrl + "/user/password?token=" + token.getToken());
+
+			mail.setModel(model);
+
+			mailSender.sendSimpleMessage(mail);
+
+			log.debug("Reset-password mail sent to {}", user.getUserEmail());
+		} catch (Exception e) {
+			log.error("Error processing SendTwoFactorEmailEvent!", e);
+		}
 	}
 }

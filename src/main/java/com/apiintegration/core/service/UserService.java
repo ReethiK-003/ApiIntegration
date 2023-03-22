@@ -4,8 +4,12 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
+import javax.persistence.LockModeType;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Lock;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.apiintegration.core.exception.DuplicateEntryException;
 import com.apiintegration.core.exception.InvalidTokenException;
+import com.apiintegration.core.exception.UserNotFoundException;
 import com.apiintegration.core.jwt.JwtTokenUtil;
 import com.apiintegration.core.jwt.UserDetailsImpl;
 import com.apiintegration.core.model.Account;
@@ -24,7 +29,9 @@ import com.apiintegration.core.model.UserVisits;
 import com.apiintegration.core.repo.RelUserProjectRepo;
 import com.apiintegration.core.repo.UserRepo;
 import com.apiintegration.core.request.AddProjectToUserRequest;
+import com.apiintegration.core.request.ChangePasswordRequest;
 import com.apiintegration.core.request.InviteUserRequest;
+import com.apiintegration.core.request.ResetPasswordRequest;
 import com.apiintegration.core.request.SignupRequest;
 import com.apiintegration.core.utils.TokenTypes;
 import com.apiintegration.core.utils.UserRole;
@@ -32,7 +39,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javassist.NotFoundException;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class UserService implements UserDetailsService {
 
@@ -59,8 +68,7 @@ public class UserService implements UserDetailsService {
 	public User createNewUser(SignupRequest request) throws DuplicateEntryException {
 
 		if (emailExists(request.getEmail())) {
-			System.out.println("Email already exist please try with different email :" + request.getEmail());
-			return null;
+			throw new DuplicateEntryException("User already exist with email !");
 		}
 		User user = new User();
 		user.setUserFullName(request.getFirstName() + " " + request.getLastName());
@@ -75,6 +83,7 @@ public class UserService implements UserDetailsService {
 		return user;
 	}
 
+	@Transactional
 	public User addAccountToUserWithToken(User user, String tokenVal) throws NotFoundException {
 
 		Token token = tokenService.findByTokenAndType(tokenVal, TokenTypes.ACCOUNT_INVITE);
@@ -84,17 +93,19 @@ public class UserService implements UserDetailsService {
 				InviteUserRequest tokenData = objectMapper.readValue(token.getData(), InviteUserRequest.class);
 				Account account = accountService.getAccountById(tokenData.getAccountId());
 				List<Project> projects = new LinkedList<>();
+
 				for (Long projectId : tokenData.getProjectsId()) {
 					projects.add(projectService.getProject(projectId));
 				}
 
 				if (tokenData.getEmail().equals(user.getUserEmail())) {
-					User dbUser = user;
-					dbUser.setAccount(account);
-					dbUser.setUserRole(tokenData.getRole());
-					dbUser = addProjects(user, projects, token.getUser());
+					user.setAccount(account);
+					user.setUserRole(tokenData.getRole());
 
-					return save(dbUser);
+					user = addProjects(user, projects, token.getUser());
+					log.debug("New member joined the account with email :{} as role :{} in {}", user.getUserEmail(),
+							user.getUserRole(), account.getAccountName());
+					return save(user);
 				}
 				throw new InvalidTokenException(
 						"User with email has no access to join the Account with this token " + user.getUserEmail());
@@ -119,6 +130,7 @@ public class UserService implements UserDetailsService {
 		}
 	}
 
+	@Transactional
 	public void sendEmailVerifyMail(User user) {
 		Token token = tokenService.createMailVerificationToken(user);
 		user.addToken(token);
@@ -126,6 +138,7 @@ public class UserService implements UserDetailsService {
 		mailService.sendVerifyEmailMail(user, token);
 	}
 
+	@Transactional
 	public void sendAccountInviteMail(InviteUserRequest request, User user) {
 		try {
 			String data = objectMapper.writeValueAsString(request);
@@ -134,8 +147,12 @@ public class UserService implements UserDetailsService {
 			user.addToken(token);
 			save(user);
 			mailService.sendAccountInviteMail(request.getEmail(), user, token);
+			log.debug("Account Invite sent to new user with email {} by {} to {}", request.getEmail(),
+					user.getUserEmail(), request.getAccountId());
 		} catch (Exception e) {
-			throw new RuntimeException("Failed to send Account invite to User with exception : ", e);
+			log.error("Failed to send Account invite to User with email {},by {}", request.getEmail(),
+					user.getUserEmail());
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -150,6 +167,7 @@ public class UserService implements UserDetailsService {
 		return user;
 	}
 
+	@Transactional
 	public User verifyEmail(String requestToken) {
 		User user = null;
 
@@ -173,14 +191,9 @@ public class UserService implements UserDetailsService {
 	}
 
 	@Transactional
-	public User addProjectToUser(AddProjectToUserRequest request, User createdBy) {
-
+	public User addProjectToUser(AddProjectToUserRequest request, User createdBy) throws UserNotFoundException {
 		User user = getUserById(request.getAddToUserId());
-		if (user != null) {
-			return save(addProjects(user, request.getProjectsList(), createdBy));
-		}
-
-		throw new DuplicateEntryException("User not found please try again !!");
+		return save(addProjects(user, request.getProjectsList(), createdBy));
 	}
 
 	public List<Project> listAllUserProjects(User user) {
@@ -201,6 +214,50 @@ public class UserService implements UserDetailsService {
 		claims.put("role", user.getUserRole());
 
 		return jwtTokenUtil.generateToken(new UserDetailsImpl(user), claims);
+	}
+
+	public boolean forgotPasswordRequest(String email) {
+		try {
+			User user = getUserByEmail(email);
+			user.setUserPassword(null);
+			Token token = tokenService.createResetPasswordToken(user);
+			mailService.sendResetPasswordMail(token, user);
+			save(user);
+			return true;
+		} catch (Exception e) {
+			log.debug("Failed to process reset-password request for email{}", email);
+			return false;
+		}
+	}
+
+	public User resetPassword(ResetPasswordRequest request) {
+		try {
+			Token token = tokenService.findByTokenAndType(request.getToken(), TokenTypes.RESET_PASSWORD);
+			User user = token.getUser();
+
+			user.setUserPassword(passwordEncoder.encode(request.getPassword()));
+			user.createAndSetNewSession();
+			save(user);
+			token.expireNow();
+			return user;
+		} catch (Exception e) {
+			throw new DuplicateEntryException(e.getMessage());
+		}
+	}
+
+	public User changePassword(ChangePasswordRequest request, User user) throws UserNotFoundException {
+		try {
+			User newUser = getUserByEmail(user.getUserEmail());
+			if (passwordEncoder.matches(request.getCurrentPassword(), newUser.getUserPassword())) {
+				newUser.setUserPassword(passwordEncoder.encode(request.getNewPassword()));
+				newUser.createAndSetNewSession();
+
+				return save(user);
+			}
+			throw new AccessDeniedException("Invalid password try again !!");
+		} catch (Exception e) {
+			throw new UserNotFoundException();
+		}
 	}
 
 	@Transactional
@@ -225,21 +282,24 @@ public class UserService implements UserDetailsService {
 		return userRepo.saveAndFlush(user);
 	}
 
-	public User getUserById(Long id) {
-		return userRepo.findById(id).orElse(null);
+	public User getUserById(Long id) throws UserNotFoundException {
+		return userRepo.findById(id).orElseThrow(() -> new UserNotFoundException());
 	}
 
-	public User getUserByEmail(String email) {
-		return userRepo.findByUserEmail(email);
+	public User getUserByEmail(String email) throws UserNotFoundException {
+		return userRepo.findByUserEmail(email).orElseThrow(() -> new UserNotFoundException());
 	}
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = getUserByEmail(username);
-		if (user != null) {
+		try {
+			User user = getUserByEmail(username);
 			return new UserDetailsImpl(user);
+		} catch (UserNotFoundException e) {
+			log.debug("User Not found for JWT authentication for email {}", username);
+			return null;
 		}
-		throw new UsernameNotFoundException("No user found with e-mail: " + username);
+
 	}
 
 }

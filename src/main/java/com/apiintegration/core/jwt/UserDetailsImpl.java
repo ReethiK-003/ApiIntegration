@@ -8,10 +8,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.apiintegration.core.exception.DuplicateEntryException;
 import com.apiintegration.core.model.User;
 import com.apiintegration.core.utils.UserRole;
 
 public class UserDetailsImpl implements UserDetails {
+
+	private static final String ROLE_PREFIX = "ROLE_";
 
 	private final List<GrantedAuthority> authorityList;
 	private User user;
@@ -22,9 +25,11 @@ public class UserDetailsImpl implements UserDetails {
 		String role = user.getUserRole();
 
 		authorityList = new LinkedList<GrantedAuthority>();
-		authorityList.add(new SimpleGrantedAuthority(UserRole.USER));
-		if(role != null & role != UserRole.USER) {
-		authorityList.add(new SimpleGrantedAuthority(role));
+//		authorityList.add(new SimpleGrantedAuthority(UserRole.USER));
+		if (role != null) {
+			authorityList.add(new SimpleGrantedAuthority(ROLE_PREFIX + role));
+		} else {
+			throw new DuplicateEntryException("Unauthorized Request detected without Role ." + user.getUserEmail());
 		}
 	}
 

@@ -62,16 +62,43 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		httpSecurity.csrf().disable()
 				// Don't need to authenticate this particular requests
 				.authorizeRequests()
-				.antMatchers("/user/signup", "/user/login", "/user/verify-login", "/user/verify-email").permitAll()
-				// Authenticate using user role for specified requests
-				.and().authorizeRequests().antMatchers("/account/create", "/account/join/*").hasRole(UserRole.USER)
-//				.and().authorizeRequests().antMatchers("/**").hasAnyRole(UserRole.LEAD, UserRole.OWNER).and()
-//				.authorizeRequests()
-//				.antMatchers("/account/addProject", "/project/**", "/services/**", "/api/**", "/user/**")
-//				.hasRole(UserRole.SUPERDEV).and().authorizeRequests()
-//				.antMatchers("/project/get/*", "/project/list", "/services/**", "/api/**", "user/**")
-//				.hasRole(UserRole.DEV).anyRequest().authenticated()
-//				// Handle exceptions for unauthenticated entries
+				.antMatchers("/user/**").permitAll()
+				
+				// Authenticate Control for Role 'OWNER'.
+				.and().authorizeRequests()
+				.antMatchers("/**").hasRole(UserRole.OWNER)
+				
+				// Authenticate Control for Role 'USER'.
+				.and().authorizeRequests()
+				.antMatchers("/account/create",
+						"/account/join/**").hasRole(UserRole.USER)
+				
+				// Authenticate Control for Role 'LEAD'.
+				.and().authorizeRequests()
+				.antMatchers("/account/create",
+						"/account/join" ).denyAll() // Deny access for this Role.
+				.antMatchers("/account/**",
+						"/project/**",
+						"/services/**",
+						"/api/**").hasRole(UserRole.LEAD)
+				
+				// Authenticate Control for Role 'SUPERDEV'.
+				.and().authorizeRequests()
+				.antMatchers("/account/invite", 
+						"/account/addproject",
+						"/project/**",
+						"/services/**",
+						"/api/**").hasRole(UserRole.SUPERDEV)
+				
+				// Authenticate Control for Role 'DEV'
+				.and().authorizeRequests()
+				.antMatchers("/project/get/**",
+						"/project/list",
+						"/services/**",
+						"/api/**").hasRole(UserRole.DEV)
+				.anyRequest().authenticated()
+				
+				//	Handle exceptions for unauthenticated entries
 				.and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
