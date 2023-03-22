@@ -22,5 +22,4 @@ public class UserRole {
 			return false;
 		}
 	}
-
 }

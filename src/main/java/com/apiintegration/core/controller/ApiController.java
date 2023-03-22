@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,8 +25,6 @@ import com.apiintegration.core.response.IResponse;
 import com.apiintegration.core.service.ApiService;
 import com.apiintegration.core.utils.APIDataObject;
 import com.apiintegration.core.utils.ApiResponseObject;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -58,10 +55,9 @@ public class ApiController {
 	}
 
 	@GetMapping("/get/{id}")
-	public IResponse getApi(@PathVariable Long id, HttpServletRequest servletRequest) {
+	public IResponse getApibyId(@PathVariable Long id, HttpServletRequest servletRequest) {
 
-		Api api = apiService.getApi(id);// generate new Response type with DataObject and set the data ,for now just
-										// using simple response.
+		Api api = apiService.getApibyId(id);// Generate new Response type with DataObject and set the data.
 		if (api != null) {
 			return new DataResponse(api, "API created successfully !!", servletRequest.getRequestURL().toString(), 200);
 		}
@@ -99,16 +95,15 @@ public class ApiController {
 	public IResponse testApi(@Valid @RequestBody TestApiRequest request) {
 
 		try {
-		APIDataObject requestObject = request.getData();
+			APIDataObject requestObject = request.getData();
 
-		ApiResponseObject responseObject = apiService.processAndFetchApiResponse(request);
+			ApiResponseObject responseObject = apiService.processAndFetchApiResponse(request);
 
-		// need to create methods for saving API response in logs.
+			// need to create methods for saving API response in logs.
 
-		return new ApiResponse(requestObject, responseObject, "/api/test", 200);
-		}catch(Exception e) {
+			return new ApiResponse(requestObject, responseObject, "/api/test", 200);
+		} catch (Exception e) {
 			return new BasicResponse("Failed to validate !!", "/api/test", 400);
 		}
-		}
-
+	}
 }

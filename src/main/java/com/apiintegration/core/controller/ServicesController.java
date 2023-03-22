@@ -35,7 +35,7 @@ public class ServicesController {
 		Services services = servicesService.createNewService(request);
 
 		if (services.getId() != null) {
-			return new DataResponse(services,"Service created Successfully !!", "/service/create", 200);
+			return new DataResponse(services, "Service created Successfully !!", "/service/create", 200);
 		}
 		return new BasicResponse("Failed to create Service !!", "/service/create", 400);
 	}
@@ -45,25 +45,25 @@ public class ServicesController {
 
 		Services service = servicesService.updateService(request);
 		if (service != null) {
-			return new DataResponse(service ,"Service Modified Successfully !!", "/service/edit", 200);
+			return new DataResponse(service, "Service Modified Successfully !!", "/service/edit", 200);
 		}
 		throw new NoDataFoundException("Failed to Modify Service !!");
 	}
 
 	@GetMapping("/get/{id}")
-	public IDataResponse getServices(@PathVariable(name = "id") Long servicesId) {
+	public IDataResponse getServicesbyId(@PathVariable(name = "id") Long servicesId) {
 
-		Services service = servicesService.getServices(servicesId);
+		Services service = servicesService.getServicesbyId(servicesId);
 		if (service != null) {
-			return new DataResponse(service ,"Success", "/service/get", 200);
+			return new DataResponse(service, "Success", "/service/get", 200);
 		}
 		throw new NoDataFoundException("Service Not Found !!");
 	}
-	
+
 	@GetMapping("list/{id}")
 	public IDataResponse getAllServicesInProject(@PathVariable(name = "id") Long projectId) {
 		List<Services> services = servicesService.getAllServicesByProjectId(projectId);
-		if(services != null) {
+		if (services != null) {
 			return new DataResponse(services, "Success", "/service/list", 200);
 		}
 		throw new NoDataFoundException("No Services AVailable !!");

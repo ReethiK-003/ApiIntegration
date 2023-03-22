@@ -27,7 +27,7 @@ public class UserVisits {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	
+
 	@ToString.Exclude
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_id")
@@ -36,12 +36,12 @@ public class UserVisits {
 	private String deviceName;
 
 	private String ipAddress;
-	
+
 	@CreationTimestamp
 	private Timestamp timestamp;
 
 	public UserVisits(String ipAddress, String deviceName) {
-	    this.ipAddress = ipAddress;
-	    this.deviceName = deviceName;
-	  }
+		this.ipAddress = ipAddress;
+		this.deviceName = deviceName;
+	}
 }

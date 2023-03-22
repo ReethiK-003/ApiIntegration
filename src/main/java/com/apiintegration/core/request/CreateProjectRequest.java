@@ -13,11 +13,11 @@ import lombok.ToString;
 @Setter
 @ToString
 public class CreateProjectRequest {
-	
+
 	@NotBlank(message = "Project Name should not be blank !!")
 	@Pattern(regexp = "^[a-zA-Z]([a-zA-Z0-9_-])+$", message = "Project name should start with alpgabets and only be in AlphaNumeric with Underscore and numbers ")
 	private String projectName;
-	
+
 	@NotBlank(message = "Project Description should not be blank !!")
 	private String projectDescription;
 

@@ -9,16 +9,10 @@ import com.apiintegration.core.model.Account;
 import com.apiintegration.core.model.Project;
 
 public interface ProjectRepo extends JpaRepository<Project, Long> {
-	
+
 	Optional<Project> findById(Long projectId);
-	
-	Project findByProjectNameAndAccountId(String projectName,Long accountId);
-	
+
+	Project findByProjectNameAndAccountId(String projectName, Long accountId);
+
 	List<Project> findByAccount(Account account);
-	
-//	Optional<Project> findAllByProjectName(String projectName);
-//	
-//	Optional<Project> findAllByAccountId(Long accountId);
-//	
-//	Project findByAccountIdAndNameAndId(Long accountId, String projectName , Long projectId);
 }

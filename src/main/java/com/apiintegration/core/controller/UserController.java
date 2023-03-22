@@ -57,7 +57,7 @@ public class UserController {
 	public IResponse login(@Valid @RequestBody LoginRequest loginRequest, HttpServletRequest servletRequest) {
 
 		User user = userService.getUserByEmail(loginRequest.getEmail());
-		log.info("Login request received..",user);
+		log.info("Login request received..", user);
 		if (user != null && userService.validatePassword(loginRequest.getPassword(), user.getUserPassword())) {
 			userService.generate2FAForUser(user);
 			return generateBasicResponse("Login Success !!", getRequestPath(servletRequest));
@@ -69,7 +69,7 @@ public class UserController {
 	@PostMapping("/verify-login")
 	public IResponse verifyLogin(@Valid @RequestBody VerifyLoginRequest request, HttpServletRequest servletRequest) {
 		User user = userService.getUserByEmail(request.getEmail());
-		log.info("login verified..",user);
+		log.info("login verified..", user);
 		if (user != null) {
 			boolean passwordMatches = userService.validatePassword(request.getPassword(), user.getUserPassword());
 			if (passwordMatches) {
@@ -86,7 +86,8 @@ public class UserController {
 						servletRequest.getHeader("user-agent")));
 				userService.save(user);
 
-				return generateBasicResponseWithToken(user, "Login verified successfully !! ", getRequestPath(servletRequest));
+				return generateBasicResponseWithToken(user, "Login verified successfully !! ",
+						getRequestPath(servletRequest));
 			}
 		}
 		return generateBasicErrorResponse("User not found !!", getRequestPath(servletRequest),
@@ -99,7 +100,8 @@ public class UserController {
 			HttpServletRequest servletRequest) {
 		User user = userService.verifyEmail(verifyEmailRequest.getToken());
 		if (user != null) {
-			return generateBasicResponseWithToken(user, "Email Verified SuccessFully !!", getRequestPath(servletRequest));
+			return generateBasicResponseWithToken(user, "Email Verified SuccessFully !!",
+					getRequestPath(servletRequest));
 		}
 		return generateBasicErrorResponse("Invalid Link !!", getRequestPath(servletRequest),
 				HttpStatus.BAD_REQUEST.value());
@@ -115,7 +117,7 @@ public class UserController {
 		IResponse resp = new BasicResponse(message, path, 200);
 		return resp;
 	}
-	
+
 	private IResponse generateBasicErrorResponse(String message, String path, int status) {
 		IResponse resp = new BasicResponse(message, path, status);
 		return resp;

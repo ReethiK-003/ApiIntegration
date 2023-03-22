@@ -27,27 +27,27 @@ public class Services {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	
+
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
 	@JoinColumn(name = "project_id")
 	private Project project;
-	
+
 	private String serviceName;
-	
+
 	private String serviceBaseUrl;
-	
+
 	private String serviceBaseUrlLive;
-	
+
 	private String serviceCode;
-	
+
 	private boolean isEnvLive = false;
-	
+
 	@CreationTimestamp
 	private Timestamp createdAt;
-	
+
 	@UpdateTimestamp
 	private Timestamp updatedAt;
-	
+
 	@Version
 	private Long version;
 

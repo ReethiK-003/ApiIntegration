@@ -13,6 +13,8 @@ import com.apiintegration.core.utils.UserRole;
 
 public class UserDetailsImpl implements UserDetails {
 
+	private static final long serialVersionUID = 1L;
+
 	private final List<GrantedAuthority> authorityList;
 	private User user;
 
@@ -23,8 +25,8 @@ public class UserDetailsImpl implements UserDetails {
 
 		authorityList = new LinkedList<GrantedAuthority>();
 		authorityList.add(new SimpleGrantedAuthority(UserRole.USER));
-		if(role != null & role != UserRole.USER) {
-		authorityList.add(new SimpleGrantedAuthority(role));
+		if (role != null & role != UserRole.USER) {
+			authorityList.add(new SimpleGrantedAuthority(role));
 		}
 	}
 

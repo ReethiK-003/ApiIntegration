@@ -72,19 +72,20 @@ public class AccountService {
 	}
 
 	@Transactional
-	public User validateAndJoinUser(String req, User user) throws JsonMappingException, JsonProcessingException, NotFoundException {
-		 userService.addAccountToUserWithToken(user, req);
-		 Account account = user.getAccount();
-		 account.increasUsersCount();
-		 save(account);
-		 return user;
+	public User validateAndJoinUser(String req, User user)
+			throws JsonMappingException, JsonProcessingException, NotFoundException {
+		userService.addAccountToUserWithToken(user, req);
+		Account account = user.getAccount();
+		account.increasUsersCount();
+		save(account);
+		return user;
 	}
 
 	public Account getAccountById(Long id) throws NotFoundException {
 		return accountRepo.findById(id)
 				.orElseThrow(() -> new NotFoundException("Account Not found Please try again !!"));
 	}
-	
+
 	public Account save(Account account) {
 		return accountRepo.save(account);
 	}

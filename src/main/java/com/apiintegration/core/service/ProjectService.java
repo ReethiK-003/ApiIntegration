@@ -22,7 +22,8 @@ public class ProjectService {
 	@Transactional
 	public Project createNewProject(CreateProjectRequest request, User user) {
 
-		boolean checkProjectExists = projectRepo.findByProjectNameAndAccountId(request.getProjectName(),user.getAccount().getId())==null;
+		boolean checkProjectExists = projectRepo.findByProjectNameAndAccountId(request.getProjectName(),
+				user.getAccount().getId()) == null;
 		if (checkProjectExists) {
 			Project project = new Project();
 
@@ -47,8 +48,8 @@ public class ProjectService {
 
 		return userService.save(user);
 	}
-	
-	public List<Project> getAllProjectsForUser(User user){
+
+	public List<Project> getAllProjectsForUser(User user) {
 		return userService.listAllUserProjects(user);
 	}
 
@@ -56,9 +57,9 @@ public class ProjectService {
 		return projectRepo.findByAccount(account);
 	}
 
-	public Project getProject(Long projectId) {
+	public Project getProjectbyId(Long projectId) {
 		return projectRepo.findById(projectId).orElse(null);
-	}	
+	}
 
 	public Project save(Project project) {
 		return projectRepo.save(project);

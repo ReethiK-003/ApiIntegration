@@ -15,13 +15,13 @@ public class ApiResponse implements IApiResponse {
 
 	public ApiResponse(APIDataObject request, ApiResponseObject response, String path, int status) {
 		this.path = (path == null) ? null : path;
-		this.message = (status == 200) ?"Success !!" : "Failed !!";
+		this.message = (status == 200) ? "Success !!" : "Failed !!";
 		this.status = (status == 200 || status == 0) ? 200 : status;
 		this.requestObject = request;
 		this.responseObject = response;
 		this.timestamp = System.currentTimeMillis();
 	}
-	
+
 	@Override
 	public String getMessage() {
 		return message;

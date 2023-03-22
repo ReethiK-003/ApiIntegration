@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Converter
 public class ObjectToDbJsonConverter implements AttributeConverter<Object, String> {
-	
+
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
 	@Override

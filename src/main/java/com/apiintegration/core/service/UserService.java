@@ -21,7 +21,6 @@ import com.apiintegration.core.model.RelUserProject;
 import com.apiintegration.core.model.Token;
 import com.apiintegration.core.model.User;
 import com.apiintegration.core.model.UserVisits;
-import com.apiintegration.core.repo.RelUserProjectRepo;
 import com.apiintegration.core.repo.UserRepo;
 import com.apiintegration.core.request.AddProjectToUserRequest;
 import com.apiintegration.core.request.InviteUserRequest;
@@ -38,8 +37,6 @@ public class UserService implements UserDetailsService {
 
 	@Autowired
 	private UserRepo userRepo;
-	@Autowired
-	private RelUserProjectRepo relUserProjectRepo;
 	@Autowired
 	private MailService mailService;
 	@Autowired
@@ -85,7 +82,7 @@ public class UserService implements UserDetailsService {
 				Account account = accountService.getAccountById(tokenData.getAccountId());
 				List<Project> projects = new LinkedList<>();
 				for (Long projectId : tokenData.getProjectsId()) {
-					projects.add(projectService.getProject(projectId));
+					projects.add(projectService.getProjectbyId(projectId));
 				}
 
 				if (tokenData.getEmail().equals(user.getUserEmail())) {
@@ -241,5 +238,4 @@ public class UserService implements UserDetailsService {
 		}
 		throw new UsernameNotFoundException("No user found with e-mail: " + username);
 	}
-
 }

@@ -15,21 +15,19 @@ import lombok.ToString;
 @Setter
 @ToString
 public class CreateServicesRequest {
-	
+
 	@NotBlank(message = "Service name should not be blank !!")
 	@Pattern(regexp = "^[a-zA-Z]([a-zA-Z0-9_-])+$", message = "Project name should start with alpgabets and only be in AlphaNumeric with Underscore and numbers ")
 	private String serviceName;
-	
+
 	@NonNull
 	private Long projectId;
 
 	@NonNull
 	private URI baseUrl;
-	
+
 	private URI baseUrlLive;
-	
+
 	private boolean isLive;
-	
+
 }
-
-

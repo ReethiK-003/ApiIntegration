@@ -21,7 +21,7 @@ public class ServicesService {
 
 	public Services createNewService(CreateServicesRequest request) {
 
-		Project project = projectService.getProject(request.getProjectId());
+		Project project = projectService.getProjectbyId(request.getProjectId());
 		boolean checkServiceExists = servicesRepo.findByServiceNameAndProjectId(request.getServiceName(),
 				project.getId()) == null;
 		if (checkServiceExists) {
@@ -40,7 +40,7 @@ public class ServicesService {
 
 	public Services updateService(UpdateServicesRequest request) {
 
-		Services service = getServices(request.getServiceId());
+		Services service = getServicesbyId(request.getServiceId());
 		if (service != null) {
 			String baseUrl = request.getBaseUrl() == null ? service.getServiceBaseUrl()
 					: request.getBaseUrl().toString();
@@ -56,7 +56,7 @@ public class ServicesService {
 	}
 
 	public List<Services> getAllServicesByProjectId(Long projectId) {
-		Project project = projectService.getProject(projectId);
+		Project project = projectService.getProjectbyId(projectId);
 		if (project != null) {
 			return getServicesByProject(project);
 		}
@@ -67,7 +67,7 @@ public class ServicesService {
 		return servicesRepo.save(services);
 	}
 
-	public Services getServices(Long id) {
+	public Services getServicesbyId(Long id) {
 		return servicesRepo.findById(id).orElse(null);
 	}
 
