@@ -47,7 +47,7 @@ public class JwtTokenUtil {
 		return expiration.before(new Date());
 	}
 
-	// generate token for user
+	// Generate token for user
 	public String generateToken(UserDetails userDetails, HashMap<String, Object> claims) {
 		return doGenerateToken(claims, userDetails.getUsername());
 	}
