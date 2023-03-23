@@ -40,11 +40,11 @@ public class ApiLogs {
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@Column(name = "request_data" , columnDefinition = "json")
+	@Column(name = "request_data", columnDefinition = "json")
 	@Convert(converter = ObjectToDbJsonConverter.class)
 	private Object requestData;
 
-	@Column(name = "response_data" , columnDefinition = "json")
+	@Column(name = "response_data", columnDefinition = "json")
 	@Convert(converter = ObjectToDbJsonConverter.class)
 	private Object responseData;
 

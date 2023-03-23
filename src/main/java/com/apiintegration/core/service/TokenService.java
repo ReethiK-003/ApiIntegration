@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class TokenService {
-	
+
 	private final TokenRepo tokenRepo;
 
 	@Transactional
@@ -69,7 +69,7 @@ public class TokenService {
 			token.expireNow();
 			tokenRepo.saveAndFlush(token);
 		} catch (Exception e) {
-//			log.warn("Failed to expire token: {}", token);
+			// log.warn("Failed to expire token: {}", token);
 		}
 	}
 
@@ -128,5 +128,4 @@ public class TokenService {
 			expireToken(token);
 		}
 	}
-
 }

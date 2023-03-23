@@ -2,7 +2,6 @@ package com.apiintegration.core.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.apiintegration.core.exception.NoDataFoundException;
-import com.apiintegration.core.model.Account;
 import com.apiintegration.core.model.Project;
-import com.apiintegration.core.model.Token;
 import com.apiintegration.core.model.User;
 import com.apiintegration.core.request.AddProjectToUserRequest;
 import com.apiintegration.core.request.CreateAccountRequest;
@@ -28,10 +25,6 @@ import com.apiintegration.core.response.IDataResponse;
 import com.apiintegration.core.response.IResponse;
 import com.apiintegration.core.service.AccountService;
 import com.apiintegration.core.service.ProjectService;
-import com.apiintegration.core.service.TokenService;
-import com.apiintegration.core.service.UserService;
-import com.apiintegration.core.utils.TokenTypes;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +39,6 @@ public class AccountController {
 	private final ProjectService projectService;
 
 	@PostMapping("/create")
-//	@PreAuthorize("hasRole('USER')") not working with preAuthorise role
 	public IDataResponse createNewAccount(@Valid @RequestBody CreateAccountRequest request,
 			@RequestAttribute User user) {
 		log.info("Creating Account for User .. ", user);
@@ -82,8 +74,6 @@ public class AccountController {
 		} catch (Exception e) {
 			return new BasicResponse("Failed to Join !!", "/accoun/invite", 400);
 		}
-
-		
 	}
 
 	@PostMapping("/addproject")

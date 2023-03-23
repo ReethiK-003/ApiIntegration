@@ -21,12 +21,12 @@ public class JwtTokenUtil {
 	@Value("${jwt.secret}")
 	private String secret;
 
-	// retrieve username from jwt token
+	// Retrieve username from JWT token
 	public String getUsernameFromToken(String token) {
 		return getClaimFromToken(token, Claims::getSubject);
 	}
 
-	// retrieve expiration date from jwt token
+	// Retrieve expiration date from JWT token
 	public Date getExpirationDateFromToken(String token) {
 		return getClaimFromToken(token, Claims::getExpiration);
 	}
@@ -36,18 +36,18 @@ public class JwtTokenUtil {
 		return claimsResolver.apply(claims);
 	}
 
-	// for retrieveing any information from token we will need the secret key
+	// Retrieving any information from token we will need the secret key
 	private Claims getAllClaimsFromToken(String token) {
 		return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
 	}
 
-	// check if the token has expired
+	// Check the token has expired or not
 	private Boolean isTokenExpired(String token) {
 		final Date expiration = getExpirationDateFromToken(token);
 		return expiration.before(new Date());
 	}
 
-	// generate token for user
+	// Generate token for user
 	public String generateToken(UserDetails userDetails, HashMap<String, Object> claims) {
 		return doGenerateToken(claims, userDetails.getUsername());
 	}

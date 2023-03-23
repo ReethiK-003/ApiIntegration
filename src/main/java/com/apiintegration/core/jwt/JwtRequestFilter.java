@@ -43,8 +43,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 		String username = null;
 		String jwtToken = null;
-		// JWT Token is in the form "Bearer token". Remove Bearer word and get
-		// only the Token
+		// JWT Token is in the form "Bearer token". If you want only token then Remove
+		// Bearer word
 		if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
 			jwtToken = requestTokenHeader.substring(7);
 			try {
@@ -62,19 +62,18 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 			UserDetails userDetails = userService.loadUserByUsername(username);
 
-			// if token is valid configure Spring Security to manually set
-			// authentication
+			// if token is valid configure Spring Security to manually set authentication
 			if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
 				if (((UserDetailsImpl) userDetails).isSessionValid(jwtTokenUtil.getSessionIdFromToken(jwtToken))) {
 					UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 							userDetails, null, userDetails.getAuthorities());
 					usernamePasswordAuthenticationToken
 							.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-					// After setting the Authentication in the context, we specify
-					// that the current user is authenticated. So it passes the
+					// After setting the Authentication in the context, we specify that the current
+					// user is authenticated. So it passes the
 					// Spring Security Configurations successfully.
 					User user = userService.getUserByEmail(username);
-					request.setAttribute("user", user );
+					request.setAttribute("user", user);
 					SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 				} else {
 					sendResponse(response, HttpStatus.UNAUTHORIZED, "Your have been logged out of this device.");

@@ -51,7 +51,7 @@ public class ApiService {
 
 	public Api createNewApi(@Valid CreateApiRequest request) throws JsonMappingException, JsonProcessingException {
 
-		Services service = servicesService.getServices(request.getServiceId());
+		Services service = servicesService.getServicesbyId(request.getServiceId());
 		if (service != null) {
 			Auth auth = request.getApiAuth();
 
@@ -94,7 +94,7 @@ public class ApiService {
 	public Api modifyApi(UpdateApiRequest request) {
 		Auth auth = request.getApiAuth();
 
-		Api api = getApi(request.getId());
+		Api api = getApibyId(request.getId());
 
 		HashMap<String, String> headers = request.getApiHeader() != null ? request.getApiHeader()
 				: api.getApiHeaderPairs();
@@ -130,7 +130,7 @@ public class ApiService {
 		case AuthTypes.API_KEY:
 			return new APIKey(auth.getKey(), auth.getValue(), auth.getAuthIn()).toHeader(headers);
 		case AuthTypes.TOKEN:
-			return new Token(auth.getKey(),auth.getToken()).toHeader(headers);
+			return new Token(auth.getKey(), auth.getToken()).toHeader(headers);
 		case AuthTypes.BASIC_AUTH:
 			return new BasicAuth(auth.getUsername(), auth.getPassword()).toHeader(headers);
 		case AuthTypes.NO_AUTH:
@@ -152,7 +152,7 @@ public class ApiService {
 	public ApiResponseObject processAndFetchApiResponse(TestApiRequest request) {
 
 		try {
-			Api api = getApi(request.getApiId());
+			Api api = getApibyId(request.getApiId());
 			APIDataObject requestObject = request.getData();
 
 			URI composedurl = composeUrl(api, requestObject);
@@ -162,7 +162,8 @@ public class ApiService {
 			ResponseEntity<Object> response;
 			WebClient client = WebClient.builder().build();
 
-// create a Selection statement for API method here and create a webclient builder.
+			// Create a Selection statement for API method here and create a web client builder.
+
 			switch (api.getApiMethod()) {
 			case ApiMethod.GET:
 				response = client.get().uri(composedurl).headers(header).retrieve().toEntity(Object.class).block();
@@ -196,7 +197,7 @@ public class ApiService {
 
 	private URI composeUrl(Api api, APIDataObject requestObject) throws URISyntaxException {
 
-		Services service = servicesService.getServices(api.getServices().getId());
+		Services service = servicesService.getServicesbyId(api.getServices().getId());
 
 		String formattedUrl = null;
 		if (service.isEnvLive()) {
@@ -226,7 +227,7 @@ public class ApiService {
 		};
 	}
 
-	public Api getApi(Long id) {
+	public Api getApibyId(Long id) {
 		return apiRepo.findById(id).orElseThrow(() -> new NoDataFoundException("Api Not Found !!"));
 	}
 

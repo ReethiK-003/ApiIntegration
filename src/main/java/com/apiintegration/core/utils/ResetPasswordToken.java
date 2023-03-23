@@ -15,10 +15,9 @@ import lombok.ToString;
 @ToString
 @DiscriminatorValue(TokenTypes.RESET_PASSWORD)
 public class ResetPasswordToken extends Token {
-  public static final int EXPIRATION = 60 * 2;
+	public static final int EXPIRATION = 60 * 2;
 
-  public ResetPasswordToken() {
-    super.setType(TokenTypes.RESET_PASSWORD);
-  }
+	public ResetPasswordToken() {
+		super.setType(TokenTypes.RESET_PASSWORD);
+	}
 }
-

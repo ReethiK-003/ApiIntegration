@@ -63,11 +63,12 @@ public class Account {
 	@JsonManagedReference
 	@OneToMany(mappedBy = "account")
 	private Set<Project> projects = new LinkedHashSet<>();
-	
+
 	public void increasUsersCount() {
-		this.usersCount = usersCount ++; 
+		this.usersCount = usersCount++;
 	}
+
 	public void decreaseUsersCount() {
-		this.usersCount = usersCount --;
+		this.usersCount = usersCount--;
 	}
 }

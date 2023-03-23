@@ -29,7 +29,7 @@ public class MailService {
 
 	@Value("${app.url)")
 	private String appUrl;
-	
+
 	@Autowired
 	private final SendMail mailSender;
 
@@ -58,7 +58,7 @@ public class MailService {
 		}
 	}
 
-	public void sendVerifyEmailMail(User user , Token token) {
+	public void sendVerifyEmailMail(User user, Token token) {
 		try {
 			Mail mail = new Mail();
 			mail.setFrom(from);
@@ -82,7 +82,7 @@ public class MailService {
 
 	}
 
-	public void sendAccountInviteMail(String toEmail ,User user ,Token token) {
+	public void sendAccountInviteMail(String toEmail, User user, Token token) {
 		try {
 			Mail mail = new Mail();
 			mail.setFrom(from);

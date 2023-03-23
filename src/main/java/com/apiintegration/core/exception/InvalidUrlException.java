@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 
 @ResponseStatus(code = HttpStatus.NOT_ACCEPTABLE)
 @NoArgsConstructor
-public class InvalidUrlException extends RuntimeException{
+public class InvalidUrlException extends RuntimeException {
+
+	private static final long serialVersionUID = 1L;
 
 	public InvalidUrlException(String msg) {
 		super(msg);

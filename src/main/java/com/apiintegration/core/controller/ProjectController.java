@@ -27,32 +27,31 @@ public class ProjectController {
 	private final ProjectService projectService;
 
 	@PostMapping("/create")
-//	@PreAuthorize("hasAnyRole('LEAD', 'OWNER' , 'SUPERDEV')")
 	public IResponse createProject(@Valid @RequestBody CreateProjectRequest request, @RequestAttribute User user) {
 
 		Project project = projectService.createNewProject(request, user);
 
 		if (project.getId() != null) {
 			user = projectService.addProjectToUser(project, user);
-			return new DataResponse(user ,"Project created Successfully !!", "/project/create", 200);
+			return new DataResponse(user, "Project created Successfully !!", "/project/create", 200);
 		}
 		return new BasicResponse("Failed to create project !!", "/project/create", 400);
 	}
 
 	@GetMapping("/get/{id}")
-	public IResponse getProject(@PathVariable(name = "id") Long projectId) {
-		Project project = projectService.getProject(projectId);
+	public IResponse getProjectbyId(@PathVariable(name = "id") Long projectId) {
+		Project project = projectService.getProjectbyId(projectId);
 		if (project != null) {
-			return new DataResponse(project,"Success !!", "/project/get", 200);
+			return new DataResponse(project, "Success !!", "/project/get", 200);
 		}
 		return new BasicResponse("Failed !!", "/project/get", 404);
 	}
-	
+
 	@GetMapping("/list")
 	public IResponse ListUserProjects(@RequestAttribute User user) {
 		List<Project> projects = projectService.getAllProjectsForUser(user);
 		if (projects != null) {
-			return new DataResponse(projects,"Success !!", "/project/get", 200);
+			return new DataResponse(projects, "Success !!", "/project/get", 200);
 		}
 		return new BasicResponse("Failed !!", "/project/get", 404);
 	}

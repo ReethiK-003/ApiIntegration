@@ -22,7 +22,7 @@ public class APIKey {
 	}
 
 	public HashMap<String, String> toHeader(HashMap<String, String> headers) {
-		String keys = key == null ? "api_key" :key;
+		String keys = key == null ? "api_key" : key;
 		headers.put(keys, value);
 		return headers;
 	}
