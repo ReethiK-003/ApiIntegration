@@ -1,0 +1,751 @@
+{
+	"info": {
+		"_postman_id": "f8b55100-bc1d-4127-bd39-29216d2f9e24",
+		"name": "Agira API Frame Work tool",
+		"description": "This Postman Collection contains the API request for the **Agira API external API configuration Framework**.  \n\nIt Contains User API calls, Account API calls, Service API calls, Project API calls, and Extrernal API invoke requests.  \n\nUse Agira API environment for the requests which is in the test-client folder.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6928002"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"manoj@agiratech.com\",\r\n    \"first_name\":\"Manoj\",\r\n    \"last_name\":\"kumar M\",\r\n    \"password\":\"Imperial16.\",\r\n    \"confirm_password\":\"Imperial16.\",\r\n    \"terms\":true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{basepath}}/user/signup",
+							"host": [
+								"{{protocol}}{{basepath}}"
+							],
+							"path": [
+								"user",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"manoj@agiratech.com\",\r\n    \"password\": \"Imperial16.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{basepath}}/user/login",
+							"host": [
+								"{{protocol}}{{basepath}}"
+							],
+							"path": [
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify-Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"manoj@agiratech.com\",\r\n    \"password\": \"Imperial16.\",\r\n    \"code\":\"252628\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{basepath}}/user/verify-login",
+							"host": [
+								"{{protocol}}{{basepath}}"
+							],
+							"path": [
+								"user",
+								"verify-login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify-Email",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\": \"h255B81L9N3xZVxov8R1v4quODRxVPtI\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{basepath}}/user/verify-email",
+							"host": [
+								"{{protocol}}{{basepath}}"
+							],
+							"path": [
+								"user",
+								"verify-email"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Account",
+			"item": [
+				{
+					"name": "Create Account",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"accountName\": \"API call service name\",\r\n    \"accountDescription\": \"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{basepath}}/account/create",
+							"host": [
+								"{{protocol}}{{basepath}}"
+							],
+							"path": [
+								"account",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invite User to account",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"API call service name\",\r\n    \"role\": \"USER\",\r\n    \"accountId\": \"1\",\r\n    \"projectsId\": \"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{basepath}}/account/invite",
+							"host": [
+								"{{protocol}}{{basepath}}"
+							],
+							"path": [
+								"account",
+								"invite"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Join account",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}{{basepath}}/account/join/{token}",
+							"host": [
+								"{{protocol}}{{basepath}}"
+							],
+							"path": [
+								"account",
+								"join",
+								"{token}"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Projects",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}{{basepath}}/account/getprojects",
+							"host": [
+								"{{protocol}}{{basepath}}"
+							],
+							"path": [
+								"account",
+								"getprojects"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}{{basepath}}/account/getUsers",
+							"host": [
+								"{{protocol}}{{basepath}}"
+							],
+							"path": [
+								"account",
+								"getUsers"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Project to account",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"projectsList\": \"\",\r\n    \"addToUserId\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{basepath}}/account/addproject",
+							"host": [
+								"{{protocol}}{{basepath}}"
+							],
+							"path": [
+								"account",
+								"addproject"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Service",
+			"item": [
+				{
+					"name": "Create Service",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"serviceName\": \"API call service name\",\r\n    \"projectId\": \"1\",\r\n    \"baseUrl\": \"252628\",\r\n    \"baseUrlLive\": \"252628\",\r\n    \"isLive\": \"true\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{basepath}}/services/create",
+							"host": [
+								"{{protocol}}{{basepath}}"
+							],
+							"path": [
+								"services",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Service",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"serviceId\": \"API call service name\",\r\n    \"baseUrl\": \"252628\",\r\n    \"baseUrlLive\": \"252628\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{basepath}}/services/edit",
+							"host": [
+								"{{protocol}}{{basepath}}"
+							],
+							"path": [
+								"services",
+								"edit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Service By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}{{basepath}}/services/get/1",
+							"host": [
+								"{{protocol}}{{basepath}}"
+							],
+							"path": [
+								"services",
+								"get",
+								"1"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Service List By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}{{basepath}}/services/list/1",
+							"host": [
+								"{{protocol}}{{basepath}}"
+							],
+							"path": [
+								"services",
+								"list",
+								"1"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Project",
+			"item": [
+				{
+					"name": "Create Project",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"projectName\": \"API call service name\",\r\n    \"projectDescription\": \"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{basepath}}/project/create",
+							"host": [
+								"{{protocol}}{{basepath}}"
+							],
+							"path": [
+								"project",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Project By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}{{basepath}}/project/get/1",
+							"host": [
+								"{{protocol}}{{basepath}}"
+							],
+							"path": [
+								"project",
+								"get",
+								"1"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get ProjectList By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}{{basepath}}/project/list/1",
+							"host": [
+								"{{protocol}}{{basepath}}"
+							],
+							"path": [
+								"project",
+								"list",
+								"1"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "API",
+			"item": [
+				{
+					"name": "Create External API",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"serviceId\": \"API call service name\",\r\n    \"apiName\": \"1\",\r\n    \"apiMethod\": \"POST\",\r\n    \"apiUrl\": \"http://localhost:9090\",\r\n    \"apiBody\": \"JSON\",\r\n    \"apiHeader\": \"1\",\r\n    \"apiQueryParam\": \"API call service name\",\r\n    \"apiAuth\": \"API KEY\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{basepath}}/api/create",
+							"host": [
+								"{{protocol}}{{basepath}}"
+							],
+							"path": [
+								"api",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get API By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}{{basepath}}/api/get/1",
+							"host": [
+								"{{protocol}}{{basepath}}"
+							],
+							"path": [
+								"api",
+								"get",
+								"1"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get API List By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}{{basepath}}/api/list/1",
+							"host": [
+								"{{protocol}}{{basepath}}"
+							],
+							"path": [
+								"api",
+								"list",
+								"1"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit API request",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"1\",\r\n    \"apiName\": \"API call service name\",\r\n    \"apiMethod\": \"POST\",\r\n    \"apiUrl\": \"http://localhost:9090\",\r\n    \"apiBody\": \"JSON\",\r\n    \"apiHeader\": \"1\",\r\n    \"apiQueryParam\": \"API call service name\",\r\n    \"apiAuth\": \"API KEY\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{basepath}}/api/edit",
+							"host": [
+								"{{protocol}}{{basepath}}"
+							],
+							"path": [
+								"api",
+								"edit"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete API By ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"1\",\r\n    \"apiName\": \"API call service name\",\r\n    \"apiMethod\": \"POST\",\r\n    \"apiUrl\": \"http://localhost:9090\",\r\n    \"apiBody\": \"JSON\",\r\n    \"apiHeader\": \"1\",\r\n    \"apiQueryParam\": \"API call service name\",\r\n    \"apiAuth\": \"API KEY\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{basepath}}/api/delete/1",
+							"host": [
+								"{{protocol}}{{basepath}}"
+							],
+							"path": [
+								"api",
+								"delete",
+								"1"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{AuthToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
