@@ -1,0 +1,372 @@
+openapi: 3.0.0
+info:
+  title: Agira API Frame Work tool
+  description: >-
+    This Postman Collection contains the API request for the **Agira API
+    external API configuration Framework**.  
+
+
+    It Contains User API calls, Account API calls, Service API calls, Project
+    API calls, and Extrernal API invoke requests.  
+
+  version: 1.0.0
+servers:
+  - url: http://localhost:9090
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+security:
+  - bearerAuth: []
+tags:
+  - name: User
+  - name: Account
+  - name: Service
+  - name: Project
+  - name: API
+paths:
+  /user/signup:
+    post:
+      tags:
+        - User
+      summary: Signup
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: manoj@agiratech.com
+                first_name: Manoj
+                last_name: kumar M
+                password: Imperial16.
+                confirm_password: Imperial16.
+                terms: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /user/login:
+    post:
+      tags:
+        - User
+      summary: Login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: manoj@agiratech.com
+                password: Imperial16.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /user/verify-login:
+    post:
+      tags:
+        - User
+      summary: Verify-Login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: manoj@agiratech.com
+                password: Imperial16.
+                code: '252628'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /user/verify-email:
+    post:
+      tags:
+        - User
+      summary: Verify-Email
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                token: h255B81L9N3xZVxov8R1v4quODRxVPtI
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /account/create:
+    post:
+      tags:
+        - Account
+      summary: Create Account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                accountName: API call service name
+                accountDescription: '1'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /account/invite:
+    post:
+      tags:
+        - Account
+      summary: Invite User to account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: API call service name
+                role: USER
+                accountId: '1'
+                projectsId: '1'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /account/join/{token}:
+    get:
+      tags:
+        - Account
+      summary: Join account
+      parameters:
+        - name: token
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /account/getprojects:
+    get:
+      tags:
+        - Account
+      summary: Get Projects
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /account/getUsers:
+    get:
+      tags:
+        - Account
+      summary: Get Users
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /account/addproject:
+    post:
+      tags:
+        - Account
+      summary: Add Project to account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                projectsList: ''
+                addToUserId: ''
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /services/create:
+    post:
+      tags:
+        - Service
+      summary: Create Service
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                serviceName: API call service name
+                projectId: '1'
+                baseUrl: '252628'
+                baseUrlLive: '252628'
+                isLive: 'true'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /services/edit:
+    post:
+      tags:
+        - Service
+      summary: Edit Service
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                serviceId: API call service name
+                baseUrl: '252628'
+                baseUrlLive: '252628'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /services/get/1:
+    get:
+      tags:
+        - Service
+      summary: Get Service By Id
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /services/list/1:
+    get:
+      tags:
+        - Service
+      summary: Get Service List By Id
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /project/create:
+    post:
+      tags:
+        - Project
+      summary: Create Project
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                projectName: API call service name
+                projectDescription: '1'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /project/get/1:
+    get:
+      tags:
+        - Project
+      summary: Get Project By Id
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /project/list/1:
+    get:
+      tags:
+        - Project
+      summary: Get ProjectList By Id
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/create:
+    post:
+      tags:
+        - API
+      summary: Create External API
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                serviceId: API call service name
+                apiName: '1'
+                apiMethod: POST
+                apiUrl: http://localhost:9090
+                apiBody: JSON
+                apiHeader: '1'
+                apiQueryParam: API call service name
+                apiAuth: API KEY
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/get/1:
+    get:
+      tags:
+        - API
+      summary: Get API By Id
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/list/1:
+    get:
+      tags:
+        - API
+      summary: Get API List By Id
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/edit:
+    put:
+      tags:
+        - API
+      summary: Edit API request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                id: '1'
+                apiName: API call service name
+                apiMethod: POST
+                apiUrl: http://localhost:9090
+                apiBody: JSON
+                apiHeader: '1'
+                apiQueryParam: API call service name
+                apiAuth: API KEY
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/delete/1:
+    delete:
+      tags:
+        - API
+      summary: Delete API By ID
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
