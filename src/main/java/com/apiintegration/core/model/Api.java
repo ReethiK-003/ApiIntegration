@@ -17,6 +17,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import com.apiintegration.core.model.service.HashMapToDbJsonConverter;
 import com.apiintegration.core.model.service.ObjectToDbJsonConverter;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,7 +28,6 @@ import lombok.ToString;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Setter
 @Getter
-@ToString
 @NoArgsConstructor
 public class Api {
 

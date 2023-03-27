@@ -1,6 +1,9 @@
 package com.apiintegration.core.model;
 
 import java.sql.Timestamp;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,10 +12,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Version;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -39,6 +45,11 @@ public class Project {
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
 	@JoinColumn(name = "account_id")
 	private Account account;
+	
+	@JsonBackReference
+	@ToString.Exclude
+	@OneToMany(mappedBy = "project", fetch = FetchType.EAGER,cascade = CascadeType.REMOVE)
+	private Set<Services> services = new LinkedHashSet<>();
 
 	@CreationTimestamp
 	private Timestamp createdAt;

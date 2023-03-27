@@ -1,12 +1,15 @@
 package com.apiintegration.core.service;
 
 import java.security.SecureRandom;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Objects;
-import javax.transaction.Transactional;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.apiintegration.core.exception.EntryNotFoundException;
 import com.apiintegration.core.exception.InvalidTokenException;
 import com.apiintegration.core.model.Token;
@@ -14,6 +17,7 @@ import com.apiintegration.core.model.User;
 import com.apiintegration.core.repo.TokenRepo;
 import com.apiintegration.core.utils.AccountInviteToken;
 import com.apiintegration.core.utils.ConfirmEmailToken;
+import com.apiintegration.core.utils.DeleteAccountToken;
 import com.apiintegration.core.utils.ResetPasswordToken;
 import com.apiintegration.core.utils.TokenTypes;
 import com.apiintegration.core.utils.TwoFactorToken;
@@ -23,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class TokenService {
-	
+
 	private final TokenRepo tokenRepo;
 
 	@Transactional
@@ -111,13 +115,28 @@ public class TokenService {
 		return accountInviteToken;
 	}
 
+	public Token createDeleteAccountToken(User user) {
+		DeleteAccountToken deleteAccountToken = new DeleteAccountToken();
+		deleteAccountToken.setUser(user);
+		deleteAccountToken.setToken(RandomStringUtils.random(32, 0, 0, true, true, null, new SecureRandom()));
+		deleteAccountToken.setExpiresAt(Token.calculateExpiryDate(DeleteAccountToken.EXPIRATION));
+
+		return deleteAccountToken;
+	}
+
+//	@Transactional
+//	public void deleteExpired() {
+//		tokenRepo.deleteByExpiresAtBefore(new Date());
+//	}
+
 	@Transactional
 	public void deleteExpired() {
-		tokenRepo.deleteByExpiresAtBefore(new Date());
+		System.out.println("Timestamp : " + new Date());
+		tokenRepo.deleteExpiredTokens(new Date());
 	}
 
 	@Scheduled(cron = "0 * * * * ?")
-	private void scheduledDeleteExpiredTokens() {
+	public void scheduledDeleteExpiredTokens() {
 		deleteExpired();
 	}
 
