@@ -26,4 +26,5 @@ public class UpdateServicesRequest {
 	private URI baseUrlLive;
 
 	private boolean isLive;
+
 }

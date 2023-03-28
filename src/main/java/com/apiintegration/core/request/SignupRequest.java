@@ -25,11 +25,11 @@ public class SignupRequest {
 
 	@NotBlank(message = "Last name should not be blank")
 	public String lastName;
-	
+
 	@NotBlank
 	@Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,16}$", message = "Password must be 8-16 characters in length")
 	public CharSequence password;
-	
+
 	@NotBlank
 	@Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,16}$", message = "Password must")
 	public CharSequence confirmPassword;

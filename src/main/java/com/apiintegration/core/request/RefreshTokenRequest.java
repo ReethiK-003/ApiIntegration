@@ -14,7 +14,8 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 public class RefreshTokenRequest {
-	
+
 	@NotBlank(message = "Token should not be null")
 	private String token;
+
 }

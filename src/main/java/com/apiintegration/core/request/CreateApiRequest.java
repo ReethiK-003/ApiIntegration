@@ -28,9 +28,9 @@ public class CreateApiRequest {
 
 	private Object apiBody;
 
-	private HashMap<String,String> apiHeader;
+	private HashMap<String, String> apiHeader;
 
-	private HashMap<String,String> apiQueryParam;
+	private HashMap<String, String> apiQueryParam;
 
 	private Auth apiAuth;
 

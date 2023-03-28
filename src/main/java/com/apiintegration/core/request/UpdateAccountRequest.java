@@ -22,4 +22,5 @@ public class UpdateAccountRequest {
 
 	private String accountName;
 	private String accountDescription;
+
 }

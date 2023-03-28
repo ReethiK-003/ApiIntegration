@@ -11,5 +11,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class VerifyEmailRequest {
+
 	private String token;
+
 }

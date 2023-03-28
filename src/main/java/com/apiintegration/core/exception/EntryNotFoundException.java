@@ -14,8 +14,8 @@ public class EntryNotFoundException extends RuntimeException {
 	public EntryNotFoundException(String msg) {
 		super(msg);
 	}
-	
+
 	public EntryNotFoundException(String msg, Throwable throwable) {
-		super(msg,throwable);
+		super(msg, throwable);
 	}
 }

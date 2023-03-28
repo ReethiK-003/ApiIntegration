@@ -18,6 +18,6 @@ import lombok.ToString;
 public class AddProjectToUserRequest {
 
 	private List<Project> projectsList = new LinkedList<>();
-	
+
 	private Long addToUserId;
 }

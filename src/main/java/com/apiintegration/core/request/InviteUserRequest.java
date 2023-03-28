@@ -26,6 +26,7 @@ public class InviteUserRequest {
 	private String role;
 	@NotNull(message = "Account_id should not blank")
 	private Long accountId;
-	
+
 	private List<Long> projectsId = new LinkedList<>();
+
 }
