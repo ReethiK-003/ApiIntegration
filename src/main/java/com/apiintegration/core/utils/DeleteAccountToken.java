@@ -13,12 +13,13 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@DiscriminatorValue(TokenTypes.TWO_FACTOR)
-public class TwoFactorToken extends Token {
-	
-	public static final int EXPIRATION = 10; // 10 minutes
+@DiscriminatorValue(TokenTypes.DELETE_ACCOUNT)
+public class DeleteAccountToken extends Token {
 
-	public TwoFactorToken() {
-		super.setType(TokenTypes.TWO_FACTOR);
+	public static final int EXPIRATION = 60 * 24;
+
+	public DeleteAccountToken() {
+		super.setType(TokenTypes.DELETE_ACCOUNT);
 	}
+
 }

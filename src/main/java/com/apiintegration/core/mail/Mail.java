@@ -23,7 +23,7 @@ public class Mail {
 	private String replyTo;
 	private String subject;
 	private String content;
-	private Map model;
+	private Map<?, ?> model;
 	private List<MailAttachment> attachments;
 
 	public Mail(String from, String to, String subject, String content) {

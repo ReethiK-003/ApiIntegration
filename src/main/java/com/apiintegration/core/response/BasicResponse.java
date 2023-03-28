@@ -7,12 +7,18 @@ public class BasicResponse implements IResponse {
 	public String path;
 	public Integer status;
 	public Long timestamp;
+	private Throwable error;
 
 	public BasicResponse(String message, String path, int status) {
 		this.path = (path == null) ? null : path;
 		this.message = (message == null) ? "OK" : message;
 		this.status = (status == 200 || status == 0) ? 200 : status;
 		this.timestamp = System.currentTimeMillis();
+	}
+
+	public BasicResponse(String message, Throwable cause) {
+		this.message = message;
+		this.error = cause;
 	}
 
 	@Override
@@ -63,6 +69,14 @@ public class BasicResponse implements IResponse {
 	@Override
 	public void setTimestamp(Long timestamp) {
 		this.timestamp = timestamp;
+	}
+
+	public Throwable getError() {
+		return error;
+	}
+
+	public void setError(Throwable error) {
+		this.error = error;
 	}
 
 }

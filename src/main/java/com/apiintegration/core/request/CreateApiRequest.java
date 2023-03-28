@@ -28,10 +28,27 @@ public class CreateApiRequest {
 
 	private Object apiBody;
 
-	private HashMap<String, String> apiHeader;
+	private HashMap<String,String> apiHeader;
 
-	private HashMap<String, String> apiQueryParam;
+	private HashMap<String,String> apiQueryParam;
 
 	private Auth apiAuth;
+
+//	public HashMap<String, String> getApiHeader() throws JsonMappingException, JsonProcessingException {
+//		String jsonHeader = objectMapper.writeValueAsString(this.apiHeader);
+//		return new ObjectMapper().readValue(jsonHeader, new TypeReference<HashMap<String, String>>() {
+//		});
+//	}
+//
+//	public HashMap<String, String> getApiQueryParam() throws JsonMappingException, JsonProcessingException {
+//		String jsonQueryParam = objectMapper.writeValueAsString(this.apiQueryParam);
+//		return new ObjectMapper().readValue(jsonQueryParam, new TypeReference<HashMap<String, String>>() {
+//		});
+//	}
+//
+//	public Auth getApiAUth() throws JsonMappingException, JsonProcessingException {
+//		
+//		return new ObjectMapper().readValue(this.apiAuth.toString(), Auth.class);
+//	}
 
 }

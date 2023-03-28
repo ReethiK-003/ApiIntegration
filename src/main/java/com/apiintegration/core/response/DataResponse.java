@@ -1,5 +1,8 @@
 package com.apiintegration.core.response;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
 public class DataResponse implements IDataResponse {
 
 	public String message;

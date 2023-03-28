@@ -1,23 +1,27 @@
 package com.apiintegration.core.request;
 
-import javax.validation.constraints.NotBlank;
+import java.util.List;
+
+import javax.validation.constraints.NotNull;
+
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @Getter
 @Setter
+@Service
 @ToString
-@NoArgsConstructor
-public class CreateAccountRequest {
+public class UpdateUserRequest {
 
-	@NotBlank(message = "account name should not blank")
-	private String accountName;
-	private String accountDescription;
+	@NotNull
+	private Long userId;
+	private String role;
+	private List<Long> projectsId;
 }

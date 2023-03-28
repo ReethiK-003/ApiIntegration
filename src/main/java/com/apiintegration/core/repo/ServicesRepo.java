@@ -5,13 +5,15 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.apiintegration.core.model.Project;
 import com.apiintegration.core.model.Services;
 
 public interface ServicesRepo extends JpaRepository<Services, Long> {
 
 	Optional<Services> findById(Long serviesId);
 
-	List<Services> findAllByProjectId(Long projectId);
+	List<Services> findAllByProject(Project project);
 
-	Services findByServiceNameAndProjectId(String serviceName, Long projectId);
+	boolean existsByServiceNameAndProject(String serviceName, Project project);
+
 }

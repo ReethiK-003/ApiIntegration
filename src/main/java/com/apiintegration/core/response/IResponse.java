@@ -2,23 +2,23 @@ package com.apiintegration.core.response;
 
 public interface IResponse {
 
-	public String getMessage();
+	  public String getMessage();
 
-	public void setMessage(String message);
+	  public void setMessage(String message);
 
-	public String getToken();
+	  public String getToken();
 
-	public void setToken(String token);
+	  public void setToken(String token);
 
-	public String getPath();
+	  public String getPath();
 
-	public void setPath(String path);
+	  public void setPath(String path);
 
-	public Integer getStatus();
+	  public Integer getStatus();
 
-	public void setStatus(Integer status);
+	  public void setStatus(Integer status);
 
-	public Long getTimestamp();
+	  public Long getTimestamp();
 
-	public void setTimestamp(Long timestamp);
+	  public void setTimestamp(Long timestamp);
 }
