@@ -1,8 +1,5 @@
 package com.apiintegration.core.request;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import com.apiintegration.core.utils.APIDataObject;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -16,8 +13,6 @@ import lombok.ToString;
 @ToString
 public class TestApiRequest {
 
-	@NotNull(message = "Api_id should not blank")
-	private Long apiId;
-	
 	private APIDataObject data;
+	private Long apiId;
 }

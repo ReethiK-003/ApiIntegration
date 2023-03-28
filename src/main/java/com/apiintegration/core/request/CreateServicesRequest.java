@@ -3,8 +3,6 @@ package com.apiintegration.core.request;
 import java.net.URI;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
@@ -17,20 +15,21 @@ import lombok.ToString;
 @Setter
 @ToString
 public class CreateServicesRequest {
-
+	
 	@NotBlank(message = "Service name should not be blank !!")
 	@Pattern(regexp = "^[a-zA-Z]([a-zA-Z0-9_-])+$", message = "Project name should start with alpgabets and only be in AlphaNumeric with Underscore and numbers ")
 	private String serviceName;
-
+	
 	@NonNull
 	private Long projectId;
 
 	@NonNull
 	private URI baseUrl;
-
+	
 	private URI baseUrlLive;
-
-	@JsonProperty("is_live")
+	
 	private boolean isLive;
-
+	
 }
+
+

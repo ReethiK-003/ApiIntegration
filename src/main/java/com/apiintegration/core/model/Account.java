@@ -18,7 +18,6 @@ import javax.persistence.Version;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -28,6 +27,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Setter
 @Getter
 @ToString
@@ -38,20 +38,13 @@ public class Account {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@ToString.Exclude
-	@JsonBackReference
-	@OneToOne(fetch = FetchType.EAGER)
+	@JsonManagedReference
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;
 
 	@Column(nullable = false)
 	private String accountName;
-
-	@JsonManagedReference
-	@ToString.Exclude
-	@OneToMany(fetch = FetchType.LAZY)
-	@JoinColumn(name = "project_id")
-	private Set<Project> projects = new LinkedHashSet<>(); 
 
 	@Column(nullable = false)
 	private String accountDescription;
@@ -67,15 +60,14 @@ public class Account {
 	@Version
 	private Long version;
 
-//	@JsonManagedReference
-//	@OneToMany(mappedBy = "account")
-//	private Set<Project> projects = new LinkedHashSet<>();
-
+	@JsonManagedReference
+	@OneToMany(mappedBy = "account")
+	private Set<Project> projects = new LinkedHashSet<>();
+	
 	public void increasUsersCount() {
-		this.usersCount = usersCount++;
+		this.usersCount = usersCount ++; 
 	}
-
 	public void decreaseUsersCount() {
-		this.usersCount = usersCount--;
+		this.usersCount = usersCount --;
 	}
 }

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.apiintegration.core.model.Api;
-import com.apiintegration.core.model.Services;
 
 public interface ApiRepo extends JpaRepository<Api, Long>{
 
@@ -16,6 +15,6 @@ public interface ApiRepo extends JpaRepository<Api, Long>{
 //	
 //	Optional<Api> findByIdAndApiName(Long apiId, String apiName);
 
-	List<Api> findByServices(Services services);
+	List<Api> findByServicesId(Long serviceId);
 	
 }

@@ -1,24 +1,15 @@
 package com.apiintegration.core.service;
 
 import java.util.List;
-import java.util.Optional;
-
-
+import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.apiintegration.core.exception.DuplicateEntryException;
-import com.apiintegration.core.exception.UserNotFoundException;
 import com.apiintegration.core.model.Account;
 import com.apiintegration.core.model.Project;
 import com.apiintegration.core.model.RelUserProject;
 import com.apiintegration.core.model.User;
 import com.apiintegration.core.repo.ProjectRepo;
-import com.apiintegration.core.repo.RelUserProjectRepo;
 import com.apiintegration.core.request.CreateProjectRequest;
-import com.apiintegration.core.request.UpdateProjectRequest;
 
-import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -27,47 +18,21 @@ public class ProjectService {
 
 	private final ProjectRepo projectRepo;
 	private final UserService userService;
-	private final ServicesService servicesService;
-	private final RelUserProjectRepo relUserProjectRepo;
 
 	@Transactional
-	public Project createNewProject(CreateProjectRequest request, User user)
-			throws DuplicateEntryException, UserNotFoundException {
+	public Project createNewProject(CreateProjectRequest request, User user) {
 
-		if (!projectRepo.existsByProjectNameAndAccount(request.getProjectName(), user.getAccount())) {
+		boolean checkProjectExists = projectRepo.findByProjectNameAndAccountId(request.getProjectName(),user.getAccount().getId())==null;
+		if (checkProjectExists) {
 			Project project = new Project();
 
 			project.setAccount(user.getAccount());
 			project.setProjectName(request.getProjectName());
 			project.setProjectDescription(request.getProjectDescription());
-			save(project);
-			System.out.println("Project Created Succesfully");
 
-			addProjectToUser(project, user.getAccount().getUser());
-			return project;
-		} else {
-			throw new DuplicateEntryException("Project with name already exists in Account !!");
+			return save(project);
 		}
-	}
-
-	@Transactional
-	public Project updateProject(UpdateProjectRequest request) throws NotFoundException {
-
-		Project project = getProject(request.getProjectId());
-
-		Optional.ofNullable(request.getProjectName()).ifPresent(project::setProjectName);
-		Optional.ofNullable(request.getProjectDescription()).ifPresent(project::setProjectDescription);
-
-		return save(project);
-	}
-
-	public void deleteProjectAndSanitize(Project project) {
-		// delete all services in project before deleting
-		servicesService.deleteAllServicesByProject(project);
-		// delete all project linked with users before deleting
-		relUserProjectRepo.deleteAll(getAllUserProjectsByProject(project));
-		// delete project.
-		projectRepo.delete(project);
+		throw new RuntimeException("Failed to create Project !!");
 	}
 
 	@Transactional
@@ -82,29 +47,18 @@ public class ProjectService {
 
 		return userService.save(user);
 	}
-
-	public void deleteAllProjectByAccount(Account account) {
-		List<Project> projectList = getAllProjectsByAccount(account);
-		for (Project project : projectList) {
-			deleteProjectAndSanitize(project);
-		}
+	
+	public List<Project> getAllProjectsForUser(User user){
+		return userService.listAllUserProjects(user);
 	}
 
 	public List<Project> getAllProjectsByAccount(Account account) {
 		return projectRepo.findByAccount(account);
 	}
 
-	public Project getProject(Long projectId) throws NotFoundException {
-		return projectRepo.findById(projectId).orElseThrow(() -> new NotFoundException("Project with id not found !!"));
-	}
-
-//	public Project getProjectByNameAndAccount(String projectName, Account account) {
-//		return projectRepo.findByProjectNameAndAccount(projectName, account).orElse(null);
-//	}
-
-	private List<RelUserProject> getAllUserProjectsByProject(Project project) {
-		return relUserProjectRepo.findAllByProject(project);
-	}
+	public Project getProject(Long projectId) {
+		return projectRepo.findById(projectId).orElse(null);
+	}	
 
 	public Project save(Project project) {
 		return projectRepo.save(project);

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(code = HttpStatus.EXPECTATION_FAILED)
 public class DuplicateEntryException extends RuntimeException {
 
-	public DuplicateEntryException (String message){
-		super (message);
+	public DuplicateEntryException (String msg){
+		super (msg);
 	}
 }

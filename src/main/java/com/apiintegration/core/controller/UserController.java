@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,8 +23,6 @@ import com.apiintegration.core.request.SignupRequest;
 import com.apiintegration.core.request.VerifyEmailRequest;
 import com.apiintegration.core.request.VerifyLoginRequest;
 import com.apiintegration.core.response.BasicResponse;
-import com.apiintegration.core.response.DataResponse;
-import com.apiintegration.core.response.IDataResponse;
 import com.apiintegration.core.response.IResponse;
 import com.apiintegration.core.service.TokenService;
 import com.apiintegration.core.service.UserService;
@@ -42,26 +39,20 @@ public class UserController {
 	private final TokenService tokenService;
 	private final JwtTokenUtil jwtService;
 
-	@GetMapping("/me")
-	public IResponse getUser(@RequestAttribute User user, HttpServletRequest servletRequest) {
-		try {
-			User _user = userService.getUserByEmail(user.getUserEmail());
-			return new DataResponse(_user, "success", getRequestPath(servletRequest), 200);
-		} catch (Exception e) {
-			return new BasicResponse(null, null, 400);
-		}
-	}
-
 	@PostMapping("/signup")
 	public IResponse signup(@Valid @RequestBody SignupRequest signupRequest, HttpServletRequest servletRequest) {
 
 		try {
 			User newUser = userService.createNewUser(signupRequest);
 
-			userService.saveUserVisit(newUser, new UserVisits(servletRequest.getHeader("X-Forwarded-For"),
-					servletRequest.getHeader("user-agent")));
+			if (newUser.getId() != null) {
 
-			return generateBasicResponse("User created successfully !!", getRequestPath(servletRequest));
+				userService.saveUserVisit(newUser, new UserVisits(servletRequest.getHeader("X-Forwarded-For"),
+						servletRequest.getHeader("user-agent")));
+
+				return generateBasicResponse("User created Successfully !!", getRequestPath(servletRequest));
+			}
+			return generateBasicErrorResponse("Failed to Create User !!", getRequestPath(servletRequest));
 		} catch (Exception e) {
 			return generateBasicErrorResponse(e.getMessage(), getRequestPath(servletRequest));
 		}
@@ -91,7 +82,8 @@ public class UserController {
 		try {
 			User user = userService.getUserByEmail(request.getEmail());
 
-			if (userService.validatePassword(request.getPassword(), user.getUserPassword())) {
+			boolean passwordMatches = userService.validatePassword(request.getPassword(), user.getUserPassword());
+			if (passwordMatches) {
 
 				tokenService.verifyAndDeleteTokenForUser(request.getCode(), user, TokenTypes.TWO_FACTOR);
 

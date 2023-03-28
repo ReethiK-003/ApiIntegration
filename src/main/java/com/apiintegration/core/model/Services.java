@@ -12,11 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonTypeId;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,28 +27,27 @@ public class Services {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-
-	@ManyToOne(fetch = FetchType.LAZY)
+	
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
 	@JoinColumn(name = "project_id")
-	@JsonBackReference
 	private Project project;
-
+	
 	private String serviceName;
-
+	
 	private String serviceBaseUrl;
-
+	
 	private String serviceBaseUrlLive;
-
+	
 	private String serviceCode;
-
-	private boolean isEnvLive;
-
+	
+	private boolean isEnvLive = false;
+	
 	@CreationTimestamp
 	private Timestamp createdAt;
-
+	
 	@UpdateTimestamp
 	private Timestamp updatedAt;
-
+	
 	@Version
 	private Long version;
 
