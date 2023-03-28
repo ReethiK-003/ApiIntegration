@@ -25,5 +25,5 @@ public class UpdateUserRequest {
 	@NotNull
 	private Long userId;
 	private String role;
-	private List<Project> projects = new LinkedList<>();
+	private List<Long> projectsId;
 }

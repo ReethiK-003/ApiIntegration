@@ -17,10 +17,12 @@ public class UpdateServicesRequest {
 	
 	@NotBlank
 	private Long serviceId;
+	
+	private String serviceName;
 
-	@Valid
 	private URI baseUrl;
 
-	@Valid
 	private URI baseUrlLive;
+	
+	private boolean isLive;
 }

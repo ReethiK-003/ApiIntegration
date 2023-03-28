@@ -16,14 +16,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.apiintegration.core.model.Api;
+import com.apiintegration.core.model.Services;
 import com.apiintegration.core.request.CreateApiRequest;
 import com.apiintegration.core.request.TestApiRequest;
 import com.apiintegration.core.request.UpdateApiRequest;
+import com.apiintegration.core.request.UpdateServicesRequest;
 import com.apiintegration.core.response.ApiResponse;
 import com.apiintegration.core.response.BasicResponse;
 import com.apiintegration.core.response.DataResponse;
 import com.apiintegration.core.response.IResponse;
 import com.apiintegration.core.service.ApiService;
+import com.apiintegration.core.service.ServicesService;
 import com.apiintegration.core.utils.APIDataObject;
 import com.apiintegration.core.utils.ApiResponseObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -33,82 +36,91 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@Slf4j
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class ApiController {
 
 	private final ApiService apiService;
+	private final ServicesService servicesService;
 
 	@PostMapping("/create")
 	public IResponse createApi(@Valid @RequestBody CreateApiRequest request, HttpServletRequest servletRequest) {
 
 		try {
-			Api newApi = apiService.createNewApi(request);
-
-			if (newApi.getId() != null) {
-				return new DataResponse(newApi, "API created successfully !!",
-						servletRequest.getRequestURL().toString(), 200);
-			}
-			return new BasicResponse("Failed 1 !!", "/api/create", 400);
+			Services service = servicesService.getServices(request.getServiceId());
+			Api api = apiService.createApi(request, service);
+			return new DataResponse(api, "API created successfully !!", getRequestPath(servletRequest), 200);
 		} catch (Exception e) {
-			log.error("Failed to create API ,", e);
-			return new BasicResponse("Failed !!", "/api/create", 400);
+			return new BasicResponse(e.getMessage(), getRequestPath(servletRequest), 400);
+		}
+	}
+
+	@PutMapping("/update")
+	public IResponse updateApi(@Valid @RequestBody UpdateApiRequest request, HttpServletRequest servletRequest) {
+
+		try {
+			Api api = apiService.updateApi(request);
+			return new DataResponse(api, "API Modified successfully !!", servletRequest.getRequestURL().toString(),
+					200);
+		} catch (Exception e) {
+			return new BasicResponse(e.getMessage(), getRequestPath(servletRequest), 400);
 		}
 	}
 
 	@GetMapping("/get/{id}")
-	public IResponse getApi(@PathVariable Long id, HttpServletRequest servletRequest) {
+	public IResponse getApi(@PathVariable(name = "id") Long apiId, HttpServletRequest servletRequest) {
 
-		Api api = apiService.getApi(id);// generate new Response type with DataObject and set the data ,for now just
-										// using simple response.
-		if (api != null) {
-			return new DataResponse(api, "API created successfully !!", servletRequest.getRequestURL().toString(), 200);
+		try {
+			Api api = apiService.getApi(apiId);// generate new Response type with DataObject and set the data ,for now
+												// just
+												// using simple response.
+			return new DataResponse(api, "Success !!", getRequestPath(servletRequest), 200);
+		} catch (Exception e) {
+			return new BasicResponse(e.getMessage(), getRequestPath(servletRequest), 400);
 		}
-		return new BasicResponse("Api Not Found !!", servletRequest.getRequestURL().toString(), 400);
 	}
 
 	@GetMapping("/list/{id}")
-	public IResponse getAllApi(@PathVariable Long serviceId, HttpServletRequest servletRequest) {
-		List<Api> apis = apiService.getAllApis(serviceId);
-		if (apis != null) {
-			return new DataResponse(apis, "Success !!", servletRequest.getRequestURL().toString(), 200);
-		}
-		return new BasicResponse("Failed !!", servletRequest.getRequestURL().toString(), 400);
-	}
+	public IResponse getAllApi(@PathVariable(name = "id") Long serviceId, HttpServletRequest servletRequest) {
+		try {
+			Services services = servicesService.getServices(serviceId);
+			List<Api> apis = apiService.getApisByServices(services);
 
-	@PutMapping("/edit")
-	public IResponse editApi(@RequestBody UpdateApiRequest request, HttpServletRequest servletRequest) {
-		Api api = apiService.modifyApi(request);
-		if (api != null) {
-			return new DataResponse(api, "API Modified successfully !!", servletRequest.getRequestURL().toString(),
-					200);
+			return new DataResponse(apis, "Success !!", getRequestPath(servletRequest), 200);
+		} catch (Exception e) {
+			return new BasicResponse("Failed !!", getRequestPath(servletRequest), 400);
 		}
-		return new BasicResponse("Api Not Found !!", servletRequest.getRequestURL().toString(), 400);
-
 	}
 
 	@DeleteMapping("/delete/{id}")
-	public IResponse deleteApi() {
+	public IResponse deleteApi(@PathVariable(name = "id") Long apiId, HttpServletRequest servletRequest) {
 
-		// implement method
-		return null;
+		try {
+			apiService.deleteApi(apiId);
+			return new BasicResponse("Success !!", getRequestPath(servletRequest), 200);
+		} catch (Exception e) {
+			return new BasicResponse(e.getMessage(), getRequestPath(servletRequest), 400);
+		}
 	}
 
 	@PostMapping("/test")
 	public IResponse testApi(@Valid @RequestBody TestApiRequest request) {
 
 		try {
-		APIDataObject requestObject = request.getData();
+			APIDataObject requestObject = request.getData();
 
-		ApiResponseObject responseObject = apiService.processAndFetchApiResponse(request);
+			ApiResponseObject responseObject = apiService.processAndFetchApiResponse(request);
 
-		// need to create methods for saving API response in logs.
+			// need to create methods for saving API response in logs.
 
-		return new ApiResponse(requestObject, responseObject, "/api/test", 200);
-		}catch(Exception e) {
+			return new ApiResponse(requestObject, responseObject, "/api/test", 200);
+		} catch (Exception e) {
+			e.printStackTrace();
 			return new BasicResponse("Failed to validate !!", "/api/test", 400);
 		}
-		}
+	}
 
+	private String getRequestPath(HttpServletRequest request) {
+		return request.getRequestURL().toString();
+	}
 }

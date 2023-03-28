@@ -1,6 +1,6 @@
 package com.apiintegration.core.request;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -15,9 +15,11 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-public class CreateAccountRequest {
+public class UpdateAccountRequest {
 
-	@NotBlank(message = "account name should not blank")
+	@NotNull
+	private Long accountId;
+
 	private String accountName;
 	private String accountDescription;
 }
