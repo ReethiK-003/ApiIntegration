@@ -1,6 +1,7 @@
 package com.apiintegration.core.request;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -15,9 +16,15 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-public class CreateAccountRequest {
+public class ResetPasswordRequest {
+	
+	@NotBlank
+	@Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,16}$", message = "Password must be 8-16 characters in length")
+	private CharSequence password;
 
-	@NotBlank(message = "account name should not blank")
-	private String accountName;
-	private String accountDescription;
+	@NotBlank
+	private CharSequence password2;
+
+	@NotBlank(message = "Your link is invalid!")
+	private String token;
 }

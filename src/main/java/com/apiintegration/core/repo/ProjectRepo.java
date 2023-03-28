@@ -12,7 +12,8 @@ public interface ProjectRepo extends JpaRepository<Project, Long> {
 
 	Optional<Project> findById(Long projectId);
 
-	Project findByProjectNameAndAccountId(String projectName, Long accountId);
+	boolean existsByProjectNameAndAccount(String projectName, Account account);
 
 	List<Project> findByAccount(Account account);
+
 }

@@ -10,9 +10,8 @@ public class UserRole {
 
 	public static boolean isValidRole(String role) {
 		role = role.toUpperCase().strip();
+
 		switch (role) {
-		case "USER":
-		case "OWNER":
 		case "LEAD":
 		case "SUPERDEV":
 		case "DEV":
@@ -22,4 +21,5 @@ public class UserRole {
 			return false;
 		}
 	}
+
 }

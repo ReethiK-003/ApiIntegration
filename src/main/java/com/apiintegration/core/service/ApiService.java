@@ -14,8 +14,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import com.apiintegration.core.exception.EntryNotFoundException;
 import com.apiintegration.core.exception.NoDataFoundException;
 import com.apiintegration.core.model.Api;
 import com.apiintegration.core.model.Services;
@@ -25,7 +25,6 @@ import com.apiintegration.core.request.TestApiRequest;
 import com.apiintegration.core.request.UpdateApiRequest;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import com.apiintegration.core.utils.APIDataObject;
 import com.apiintegration.core.utils.ApiResponseObject;
@@ -36,65 +35,54 @@ import com.apiintegration.core.utils.api.AuthIn;
 import com.apiintegration.core.utils.api.AuthTypes;
 import com.apiintegration.core.utils.api.BasicAuth;
 import com.apiintegration.core.utils.api.Token;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
+import javassist.NotFoundException;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class ApiService {
 
 	private final ApiRepo apiRepo;
-	private final ServicesService servicesService;
-	private final ObjectMapper objectMapper;
 
-	public Api createNewApi(@Valid CreateApiRequest request) throws JsonMappingException, JsonProcessingException {
+	public Api createApi(@Valid CreateApiRequest request, Services service)
+			throws JsonMappingException, JsonProcessingException {
 
-		Services service = servicesService.getServicesbyId(request.getServiceId());
-		if (service != null) {
-			Auth auth = request.getApiAuth();
-
-			try {
-				System.out.println(objectMapper.writeValueAsString(auth));
-			} catch (JsonProcessingException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-
-			HashMap<String, String> headers = request.getApiHeader() != null ? request.getApiHeader() : new HashMap<>();
-			HashMap<String, String> queryParam = request.getApiQueryParam() != null ? request.getApiQueryParam()
-					: new HashMap<>();
-
-			Api api = new Api();
-
-			api.setServices(service);
-			api.setApiName(request.getApiName());
-			api.setApiMethod(request.getApiMethod());
-			api.setApiPathUrl(request.getApiUrl());
-			api.setApiBodyObject(request.getApiBody());
-			api.setApiAuthType(auth.getAuthType());
-
-			api.setApiAuthIn(auth.getAuthIn());
-
-			if (auth.getAuthIn().equals(AuthIn.HEADER)) {
-				headers = composeAndAddHeaders(auth, headers);
-			} else if (auth.getAuthIn().equals(AuthIn.QUERY)) {
-				queryParam = composeAndAddParams(auth, queryParam);
-			}
-
-			api.setApiHeaderPairs(headers);
-			api.setApiQueryParam(queryParam);
-
-			return save(api);
-		}
-		throw new EntryNotFoundException("Service not found to create API please try again !");
-	}
-
-	public Api modifyApi(UpdateApiRequest request) {
 		Auth auth = request.getApiAuth();
 
-		Api api = getApibyId(request.getId());
+		HashMap<String, String> headers = request.getApiHeader() != null ? request.getApiHeader() : new HashMap<>();
+		HashMap<String, String> queryParam = request.getApiQueryParam() != null ? request.getApiQueryParam()
+				: new HashMap<>();
+
+		Api api = new Api();
+
+		api.setServices(service);
+		api.setApiName(request.getApiName());
+		api.setApiMethod(request.getApiMethod());
+		api.setApiPathUrl(request.getApiUrl());
+		api.setApiBodyObject(request.getApiBody());
+		api.setApiAuthType(auth.getAuthType());
+
+		api.setApiAuthIn(auth.getAuthIn());
+
+		if (auth.getAuthIn().equals(AuthIn.HEADER)) {
+			headers = composeAndAddHeaders(auth, headers);
+		} else if (auth.getAuthIn().equals(AuthIn.QUERY)) {
+			queryParam = composeAndAddParams(auth, queryParam);
+		}
+
+		api.setApiHeaderPairs(headers);
+		api.setApiQueryParam(queryParam);
+
+		return save(api);
+	}
+
+	public Api updateApi(UpdateApiRequest request) {
+		Auth auth = request.getApiAuth();
+
+		Api api = getApi(request.getId());
 
 		HashMap<String, String> headers = request.getApiHeader() != null ? request.getApiHeader()
 				: api.getApiHeaderPairs();
@@ -120,9 +108,17 @@ public class ApiService {
 		if (request.getApiQueryParam() != null) {
 			api.setApiQueryParam(queryParam);
 		}
-
 		return save(api);
+	}
 
+	public void deleteApi(Long apiId) {
+		Api api = getApi(apiId);
+		apiRepo.delete(api);
+	}
+
+	public void deleteAllApiByService(Services services) {
+		List<Api> apis = getApisByServices(services);
+		apiRepo.deleteInBatch(apis);
 	}
 
 	private HashMap<String, String> composeAndAddHeaders(Auth auth, HashMap<String, String> headers) {
@@ -149,21 +145,20 @@ public class ApiService {
 		}
 	}
 
-	public ApiResponseObject processAndFetchApiResponse(TestApiRequest request) {
+	public ApiResponseObject processAndFetchApiResponse(TestApiRequest request) throws NotFoundException {
 
+		Api api = getApi(request.getApiId());
+		Services services = api.getServices();
+		APIDataObject requestObject = request.getData();
+
+		URI composedurl = composeUrl(api, requestObject, services);
+		Object body = requestObject.getBodyObject();
+		Consumer<HttpHeaders> header = composeHeaders(requestObject.getHeaderPairs());
+
+		ResponseEntity<Object> response;
+		WebClient client = WebClient.builder().build();
 		try {
-			Api api = getApibyId(request.getApiId());
-			APIDataObject requestObject = request.getData();
-
-			URI composedurl = composeUrl(api, requestObject);
-			Object body = requestObject.getBodyObject();
-			Consumer<HttpHeaders> header = composeHeaders(requestObject.getHeaderPairs());
-
-			ResponseEntity<Object> response;
-			WebClient client = WebClient.builder().build();
-
-			// Create a Selection statement for API method here and create a web client builder.
-
+// create a Selection statement for API method here and create a webclient builder.
 			switch (api.getApiMethod()) {
 			case ApiMethod.GET:
 				response = client.get().uri(composedurl).headers(header).retrieve().toEntity(Object.class).block();
@@ -189,15 +184,14 @@ public class ApiService {
 			} else {
 				throw new RuntimeException("Error Occured while Performing API test action !!");
 			}
-		} catch (URISyntaxException e) {
-			log.error("Failed to format URI for request ");
-			throw new RuntimeException("Exception occured while formatting url for API request ", e);
+		} catch (WebClientResponseException ex) {
+			ApiResponseObject responseObject = new ApiResponseObject(composedurl, ex.getResponseBodyAsString(),
+					ex.getHeaders(), ex.getRawStatusCode());
+			return responseObject;
 		}
 	}
 
-	private URI composeUrl(Api api, APIDataObject requestObject) throws URISyntaxException {
-
-		Services service = servicesService.getServicesbyId(api.getServices().getId());
+	private URI composeUrl(Api api, APIDataObject requestObject, Services service) {
 
 		String formattedUrl = null;
 		if (service.isEnvLive()) {
@@ -218,7 +212,12 @@ public class ApiService {
 				i++;
 			}
 		}
-		return new URI(formattedUrl.toString());
+		try {
+			return new URI(formattedUrl.toString());
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Failed to format URL !!.");
+		}
 	}
 
 	private Consumer<HttpHeaders> composeHeaders(HashMap<String, String> request) {
@@ -227,12 +226,12 @@ public class ApiService {
 		};
 	}
 
-	public Api getApibyId(Long id) {
-		return apiRepo.findById(id).orElseThrow(() -> new NoDataFoundException("Api Not Found !!"));
+	public Api getApi(Long id) {
+		return apiRepo.findById(id).orElseThrow(() -> new NoDataFoundException("Api not found for id"));
 	}
 
-	public List<Api> getAllApis(Long serviceId) {
-		return apiRepo.findByServicesId(serviceId);
+	public List<Api> getApisByServices(Services services) {
+		return apiRepo.findByServices(services);
 	}
 
 	private Api save(Api api) {

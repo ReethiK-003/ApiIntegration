@@ -7,7 +7,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -38,11 +37,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private JwtRequestFilter jwtRequestFilter;
 
-	// We configured AuthenticationManager, it knows from where to load user for
-	// matching credentials
-	// Use BCryptPasswordEncoder to encrypt the password
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+		// configure AuthenticationManager so that it knows from where to load
+		// user for matching credentials
+		// Use BCryptPasswordEncoder
 		auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
 	}
 
@@ -62,17 +61,27 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		httpSecurity.csrf().disable()
 				// Don't need to authenticate this particular requests
-				.authorizeRequests()
-				.antMatchers("/user/signup", "/user/login", "/user/verify-login", "/user/verify-email").permitAll()
-				// Authenticate using user role for specified requests
-				.and().authorizeRequests().antMatchers("/account/create", "/account/join/*").hasRole(UserRole.USER)
-//				.and().authorizeRequests().antMatchers("/**").hasAnyRole(UserRole.LEAD, UserRole.OWNER).and()
-//				.authorizeRequests()
-//				.antMatchers("/account/addProject", "/project/**", "/services/**", "/api/**", "/user/**")
-//				.hasRole(UserRole.SUPERDEV).and().authorizeRequests()
-//				.antMatchers("/project/get/*", "/project/list", "/services/**", "/api/**", "user/**")
-//				.hasRole(UserRole.DEV).anyRequest().authenticated()
-//				// Handle exceptions for unauthenticated entries
+				.authorizeRequests().antMatchers("/user/**").permitAll()
+
+				// Authenticate Control for Role 'USER'.
+				.antMatchers("/account/create", "/account/join/**").hasRole(UserRole.USER)
+				
+				.antMatchers("/account/delete","/account/confirm-delete/{token}").hasRole(UserRole.OWNER)
+
+				// Authenticate Control for Role 'LEAD'.
+				.antMatchers("/account/update", "/account/invite-member", "/account/update-member",
+						"/account/remove-member/**", "/account/list-member", "/account/list-project","/project/delete/**")
+				.hasAnyRole(UserRole.LEAD, UserRole.OWNER)
+
+				// Authenticate Control for Role 'SUPERDEV'.
+				.antMatchers("/project/create", "/project/update")
+				.hasAnyRole(UserRole.SUPERDEV, UserRole.LEAD, UserRole.OWNER)
+
+				// Authenticate Control for Role 'DEV'
+				.antMatchers("/project/get/{id}", "/project/list", "/services/**", "/api/**")
+				.hasAnyRole(UserRole.DEV, UserRole.SUPERDEV, UserRole.LEAD, UserRole.OWNER)
+
+				// Handle exceptions for unauthenticated entries
 				.and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
@@ -81,11 +90,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// Add a filter to validate the tokens with every request
 		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 		httpSecurity.addFilterAfter(new LogEnhancerFilter(), JwtRequestFilter.class);
-	}
-
-	public void swaggerConfigure(WebSecurity web) throws Exception {
-	    web.ignoring()
-	       .antMatchers("/swagger-ui/**", "/swagger-resources/**", "/v2/api-docs", "/webjars/**");
 	}
 
 	@Bean

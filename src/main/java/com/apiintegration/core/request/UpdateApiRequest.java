@@ -1,5 +1,4 @@
 package com.apiintegration.core.request;
-
 import java.util.HashMap;
 
 import javax.validation.constraints.NotNull;
@@ -20,7 +19,7 @@ public class UpdateApiRequest {
 
 	@NotNull
 	private Long id;
-
+	
 	private String apiName;
 
 	private String apiMethod;
@@ -33,6 +32,6 @@ public class UpdateApiRequest {
 
 	private HashMap<String, String> apiQueryParam;
 
-	private Auth apiAuth;
+	private Auth apiAuth ;
 
 }

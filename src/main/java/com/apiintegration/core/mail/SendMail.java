@@ -27,19 +27,19 @@ public class SendMail {
 
 	@Autowired
 	private JavaMailSender emailSender;
-
+	
 	@Autowired
 	private Configuration freemarkerConfig;
-
+	
 	@Autowired
 	private FileStorageService fileStorageService;
-
+	
 	public void sendSimpleMessage(Mail mail) throws MessagingException, IOException, TemplateException {
 
 		MimeMessage message = emailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
 				StandardCharsets.UTF_8.name());
-
+		
 		Template t = freemarkerConfig.getTemplate(mail.getContent());
 		String html = FreeMarkerTemplateUtils.processTemplateIntoString(t, mail.getModel());
 

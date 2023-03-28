@@ -5,7 +5,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.apiintegration.core.model.Token;
 import com.apiintegration.core.model.User;
@@ -22,5 +26,8 @@ public interface TokenRepo extends PagingAndSortingRepository<Token, Long>, JpaR
 
 	Optional<Token> findByTypeAndUserAndExpiresAtAfter(String tokenType, User user, Date date);
 
-	void deleteByExpiresAtBefore(Date date);
+	@Modifying
+	@Transactional
+	@Query("DELETE FROM Token t WHERE t.expiresAt < :now")
+	void deleteExpiredTokens(@Param("now") Date now);
 }

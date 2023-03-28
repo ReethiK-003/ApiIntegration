@@ -4,11 +4,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.EXPECTATION_FAILED)
-public class DuplicateEntryException extends RuntimeException {
+public class InvalidOperationException extends RuntimeException{
 
-	private static final long serialVersionUID = 8330252806059654993L;
+	private static final long serialVersionUID = 8779288517846958848L;
 
-	public DuplicateEntryException(String message) {
-		super(message);
+	public InvalidOperationException(String msg) {
+		super(msg);
 	}
 }

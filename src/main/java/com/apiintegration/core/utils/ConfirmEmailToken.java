@@ -15,8 +15,7 @@ import lombok.ToString;
 @ToString
 @DiscriminatorValue(TokenTypes.CONFIRM_EMAIL)
 public class ConfirmEmailToken extends Token {
-
-	public static final int EXPIRATION = 60 * 24 * 30;
+	public static final int EXPIRATION = 60 * 24 * 1;
 
 	public ConfirmEmailToken() {
 		super.setType(TokenTypes.CONFIRM_EMAIL);

@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class EntryNotFoundException extends RuntimeException {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1971307547109780954L;
 
 	public EntryNotFoundException(String msg) {
 		super(msg);
 	}
-
+	
 	public EntryNotFoundException(String msg, Throwable throwable) {
-		super(msg, throwable);
+		super(msg,throwable);
 	}
 }

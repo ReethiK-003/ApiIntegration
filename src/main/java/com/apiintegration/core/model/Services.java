@@ -1,7 +1,6 @@
 package com.apiintegration.core.model;
 
 import java.sql.Timestamp;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -10,8 +9,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,8 +31,9 @@ public class Services {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "project_id")
+	@JsonBackReference
 	private Project project;
 
 	private String serviceName;
@@ -40,7 +44,7 @@ public class Services {
 
 	private String serviceCode;
 
-	private boolean isEnvLive = false;
+	private boolean isEnvLive;
 
 	@CreationTimestamp
 	private Timestamp createdAt;
