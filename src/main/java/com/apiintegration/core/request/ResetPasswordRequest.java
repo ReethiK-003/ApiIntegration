@@ -17,7 +17,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 public class ResetPasswordRequest {
-	
+
 	@NotBlank
 	@Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,16}$", message = "Password must be 8-16 characters in length")
 	private CharSequence password;
@@ -27,4 +27,5 @@ public class ResetPasswordRequest {
 
 	@NotBlank(message = "Your link is invalid!")
 	private String token;
+
 }

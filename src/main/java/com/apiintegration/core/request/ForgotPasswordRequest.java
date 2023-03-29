@@ -17,4 +17,5 @@ public class ForgotPasswordRequest {
 
 	@NotBlank(message = "Email is required")
 	private String email;
+
 }

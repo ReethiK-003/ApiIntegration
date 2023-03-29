@@ -15,10 +15,11 @@ import lombok.ToString;
 @ToString
 @DiscriminatorValue(TokenTypes.TWO_FACTOR)
 public class TwoFactorToken extends Token {
-	
+
 	public static final int EXPIRATION = 10; // 10 minutes
 
 	public TwoFactorToken() {
 		super.setType(TokenTypes.TWO_FACTOR);
 	}
+
 }

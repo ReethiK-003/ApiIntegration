@@ -23,4 +23,5 @@ public class VerifyLoginRequest {
 
 	@NotBlank(message = "Enter the 2FA code")
 	private String code;
+
 }

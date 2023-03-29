@@ -12,4 +12,5 @@ public interface IApiResponse extends IResponse {
 	public APIDataObject getRequestObject();
 
 	public void setRequestObject(APIDataObject requestObject);
+
 }

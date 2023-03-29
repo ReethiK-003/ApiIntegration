@@ -20,4 +20,5 @@ public class TestApiRequest {
 	private Long apiId;
 
 	private APIDataObject data;
+
 }

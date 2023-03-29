@@ -24,4 +24,5 @@ public class UpdateUserRequest {
 	private Long userId;
 	private String role;
 	private List<Long> projectsId;
+
 }
