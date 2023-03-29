@@ -60,7 +60,7 @@ public class UserController {
 			userService.saveUserVisit(newUser, new UserVisits(servletRequest.getHeader("X-Forwarded-For"),
 					servletRequest.getHeader("user-agent")));
 
-			return generateBasicResponse("User created successfully !!", getRequestPath(servletRequest));
+			return generateBasicResponseWithToken(newUser, "User created successfully !!", getRequestPath(servletRequest));
 		} catch (Exception e) {
 			return generateBasicErrorResponse(e.getMessage(), getRequestPath(servletRequest));
 		}
@@ -107,6 +107,19 @@ public class UserController {
 		} catch (Exception e) {
 			return generateBasicErrorResponse(e.getMessage(), getRequestPath(servletRequest));
 		}
+	}
+
+	@PostMapping("/resend-verification-email")
+	public IResponse resendVerificationEmail(@RequestAttribute User user, HttpServletRequest servletRequest) {
+
+		try {
+			userService.sendEmailVerifyMail(user);
+			return generateBasicResponseWithToken(user, "Resend Verification mail success !!",
+					getRequestPath(servletRequest));
+		} catch (Exception e) {
+			return generateBasicErrorResponse(e.getMessage(), getRequestPath(servletRequest));
+		}
+
 	}
 
 	@PostMapping("/verify-email")

@@ -2,6 +2,7 @@ package com.apiintegration.core.service;
 
 import java.security.SecureRandom;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -141,4 +142,8 @@ public class TokenService {
 		}
 	}
 
+	public void deleteAllByUserAndType(User user,String type) {
+		List<Token>tokenList = tokenRepo.findAllByUserAndType(user, type);
+		tokenRepo.deleteInBatch(tokenList);
+	}
 }
