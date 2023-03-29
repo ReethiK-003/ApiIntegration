@@ -82,6 +82,9 @@ public class UserService implements UserDetailsService {
 
 	@Transactional
 	public void sendEmailVerifyMail(User user) {
+
+		tokenService.deleteAllByUserAndType(user, TokenTypes.CONFIRM_EMAIL);
+
 		Token token = tokenService.createMailVerificationToken(user);
 		user.addToken(token);
 		save(user);
