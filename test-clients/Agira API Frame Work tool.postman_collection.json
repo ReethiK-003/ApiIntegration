@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "f8b55100-bc1d-4127-bd39-29216d2f9e24",
+		"_postman_id": "81c524bf-6d50-4c9d-9201-83ed2c04c4aa",
 		"name": "Agira API Frame Work tool",
 		"description": "This Postman Collection contains the API request for the **Agira API external API configuration Framework**.  \n\nIt Contains User API calls, Account API calls, Service API calls, Project API calls, and Extrernal API invoke requests.  \n\nUse Agira API environment for the requests which is in the test-client folder.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -8,43 +8,19 @@
 	},
 	"item": [
 		{
-			"name": "User",
+			"name": "UserController",
 			"item": [
-				{
-					"name": "Signup",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"email\":\"manoj@agiratech.com\",\r\n    \"first_name\":\"Manoj\",\r\n    \"last_name\":\"kumar M\",\r\n    \"password\":\"Imperial16.\",\r\n    \"confirm_password\":\"Imperial16.\",\r\n    \"terms\":true\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{basepath}}/user/signup",
-							"host": [
-								"{{protocol}}{{basepath}}"
-							],
-							"path": [
-								"user",
-								"signup"
-							]
-						}
-					},
-					"response": []
-				},
 				{
 					"name": "Login",
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"manoj@agiratech.com\",\r\n    \"password\": \"Imperial16.\"\r\n}",
+							"raw": "{\n    \"email\": \"manoj@agiratech.com\",\n    \"password\": \"Imperial16.\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -52,9 +28,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{protocol}}{{basepath}}/user/login",
+							"raw": "{{Protocol}}{{Basepath}}/user/login",
 							"host": [
-								"{{protocol}}{{basepath}}"
+								"{{Protocol}}{{Basepath}}"
 							],
 							"path": [
 								"user",
@@ -67,11 +43,14 @@
 				{
 					"name": "Verify-Login",
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"manoj@agiratech.com\",\r\n    \"password\": \"Imperial16.\",\r\n    \"code\":\"252628\"\r\n}",
+							"raw": "{\n    \"email\": \"manoj@agiratech.com\",\n    \"password\": \"Imperial16.\",\n    \"code\": \"642130\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -79,13 +58,98 @@
 							}
 						},
 						"url": {
-							"raw": "{{protocol}}{{basepath}}/user/verify-login",
+							"raw": "{{Protocol}}{{Basepath}}/user/verify-login",
 							"host": [
-								"{{protocol}}{{basepath}}"
+								"{{Protocol}}{{Basepath}}"
 							],
 							"path": [
 								"user",
 								"verify-login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Me",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JwtAuthToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Protocol}}{{Basepath}}/user/me",
+							"host": [
+								"{{Protocol}}{{Basepath}}"
+							],
+							"path": [
+								"user",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh-Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\":\"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYW5vakBhZ2lyYXRlY2guY29tIiwicm9sZSI6IlVTRVIiLCJuYW1lIjoiTWFub2oga3VtYXIgTSIsImV4cCI6MTY4MDAyMjA3MiwiaWF0IjoxNjgwMDA0MDcyLCJqdGkiOiJkNTIyUE5vaTFZNkpTZkRqb1RLMGRDYU9JOW5iRUNYbmdsbE14T3RUTWJxUUY4T2JPQm9oRnBSSzhTdk1RTDJwIiwidmVtIjp0cnVlfQ.e1bNPvMLkhUTfRb32Tvo_B5RbfgfxM5tyN-vH-3AlcGDRxNSxSs7xKYkFqE30mzITIMl3_IlwSxsA06nhEpkZw\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Protocol}}{{Basepath}}/user/refresh-token",
+							"host": [
+								"{{Protocol}}{{Basepath}}"
+							],
+							"path": [
+								"user",
+								"refresh-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SignUp",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"testOwner@yopmail.com\",\n    \"first_name\":\"Owner\",\n    \"last_name\":\"1\",\n    \"password\":\"Reethik@123\",\n    \"confirm_password\":\"Reethik@123\",\n    \"terms\":true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Protocol}}{{Basepath}}/user/signup",
+							"host": [
+								"{{Protocol}}{{Basepath}}"
+							],
+							"path": [
+								"user",
+								"signup"
 							]
 						}
 					},
@@ -98,7 +162,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"token\": \"h255B81L9N3xZVxov8R1v4quODRxVPtI\"\r\n}",
+							"raw": "{\n    \"token\":\"GPSysYGJnBm5W9lqHWqlUGIVAz0bUUWy\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -106,9 +170,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{protocol}}{{basepath}}/user/verify-email",
+							"raw": "{{Protocol}}{{Basepath}}/user/verify-email",
 							"host": [
-								"{{protocol}}{{basepath}}"
+								"{{Protocol}}{{Basepath}}"
 							],
 							"path": [
 								"user",
@@ -117,20 +181,15 @@
 						}
 					},
 					"response": []
-				}
-			]
-		},
-		{
-			"name": "Account",
-			"item": [
+				},
 				{
-					"name": "Create Account",
+					"name": "Forgot-password",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"accountName\": \"API call service name\",\r\n    \"accountDescription\": \"1\"\r\n}",
+							"raw": "{\n    \"email\":\"testOwner@yopmail.com\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -138,9 +197,121 @@
 							}
 						},
 						"url": {
-							"raw": "{{protocol}}{{basepath}}/account/create",
+							"raw": "{{Protocol}}{{Basepath}}/user/forgot-password",
 							"host": [
-								"{{protocol}}{{basepath}}"
+								"{{Protocol}}{{Basepath}}"
+							],
+							"path": [
+								"user",
+								"forgot-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset-Password",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"password\":\"NewPassword1\",\n    \"password2\":\"NewPassword1\",\n    \"token\":\"DgyIIHTsU7x80GTMARCpdo58M5K2b23z\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Protocol}}{{Basepath}}/user/reset-password",
+							"host": [
+								"{{Protocol}}{{Basepath}}"
+							],
+							"path": [
+								"user",
+								"reset-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change-Password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JwtAuthToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"current_password\":\"Reethik@123\",\n    \"new_password\":\"Reeth@123\",\n    \"confirm_password\":\"Reeth@123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Protocol}}{{Basepath}}/user/change-password",
+							"host": [
+								"{{Protocol}}{{Basepath}}"
+							],
+							"path": [
+								"user",
+								"change-password"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AccountController",
+			"item": [
+				{
+					"name": "Create-Account",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JwtAuthToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"account_name\": \"CD_AccountTest\",\n    \"account_description\": \"This is my Account test account CD_AccountTest\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Protocol}}{{Basepath}}/account/create",
+							"host": [
+								"{{Protocol}}{{Basepath}}"
 							],
 							"path": [
 								"account",
@@ -151,13 +322,23 @@
 					"response": []
 				},
 				{
-					"name": "Invite User to account",
+					"name": "Update-Account",
 					"request": {
-						"method": "POST",
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JwtAuthToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"API call service name\",\r\n    \"role\": \"USER\",\r\n    \"accountId\": \"1\",\r\n    \"projectsId\": \"1\"\r\n}",
+							"raw": "{\n    \"account_id\": 115,\n    \"account_name\":null,\n    \"account_description\":\"This account_description is updated .\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -165,475 +346,158 @@
 							}
 						},
 						"url": {
-							"raw": "{{protocol}}{{basepath}}/account/invite",
+							"raw": "{{Protocol}}{{Basepath}}/account/update",
 							"host": [
-								"{{protocol}}{{basepath}}"
+								"{{Protocol}}{{Basepath}}"
 							],
 							"path": [
 								"account",
-								"invite"
+								"update"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Join account",
+					"name": "Delete-Account",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JwtAuthToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{Protocol}}{{Basepath}}/account/delete",
+							"host": [
+								"{{Protocol}}{{Basepath}}"
+							],
+							"path": [
+								"account",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Confirm-Delete-Account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JwtAuthToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Protocol}}{{Basepath}}/confirm-delete/{token}",
+							"host": [
+								"{{Protocol}}{{Basepath}}"
+							],
+							"path": [
+								"confirm-delete",
+								"{token}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invite-Member",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JwtAuthToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"Lead1@yopmail.com\",\n    \"role\":\"LEAD\",\n    \"account_id\":115,\n    \"projects_id\":[]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Protocol}}{{Basepath}}/account/invite-member",
+							"host": [
+								"{{Protocol}}{{Basepath}}"
+							],
+							"path": [
+								"account",
+								"invite-member"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Join-Account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JwtAuthToken}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{protocol}}{{basepath}}/account/join/{token}",
+							"raw": "{{Protocol}}{{Basepath}}/account/join/{token}",
 							"host": [
-								"{{protocol}}{{basepath}}"
+								"{{Protocol}}{{Basepath}}"
 							],
 							"path": [
 								"account",
 								"join",
 								"{token}"
-							],
-							"query": [
-								{
-									"key": "",
-									"value": null,
-									"disabled": true
-								}
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Get Projects",
+					"name": "Update-Member",
 					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{protocol}}{{basepath}}/account/getprojects",
-							"host": [
-								"{{protocol}}{{basepath}}"
-							],
-							"path": [
-								"account",
-								"getprojects"
-							],
-							"query": [
+						"auth": {
+							"type": "bearer",
+							"bearer": [
 								{
-									"key": "",
-									"value": null,
-									"disabled": true
+									"key": "token",
+									"value": "{{JwtAuthToken}}",
+									"type": "string"
 								}
 							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Users",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{protocol}}{{basepath}}/account/getUsers",
-							"host": [
-								"{{protocol}}{{basepath}}"
-							],
-							"path": [
-								"account",
-								"getUsers"
-							],
-							"query": [
-								{
-									"key": "",
-									"value": null,
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Add Project to account",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"projectsList\": \"\",\r\n    \"addToUserId\": \"\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
 						},
-						"url": {
-							"raw": "{{protocol}}{{basepath}}/account/addproject",
-							"host": [
-								"{{protocol}}{{basepath}}"
-							],
-							"path": [
-								"account",
-								"addproject"
-							],
-							"query": [
-								{
-									"key": "",
-									"value": null,
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				}
-			]
-		},
-		{
-			"name": "Service",
-			"item": [
-				{
-					"name": "Create Service",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"serviceName\": \"API call service name\",\r\n    \"projectId\": \"1\",\r\n    \"baseUrl\": \"252628\",\r\n    \"baseUrlLive\": \"252628\",\r\n    \"isLive\": \"true\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{basepath}}/services/create",
-							"host": [
-								"{{protocol}}{{basepath}}"
-							],
-							"path": [
-								"services",
-								"create"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Edit Service",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"serviceId\": \"API call service name\",\r\n    \"baseUrl\": \"252628\",\r\n    \"baseUrlLive\": \"252628\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{basepath}}/services/edit",
-							"host": [
-								"{{protocol}}{{basepath}}"
-							],
-							"path": [
-								"services",
-								"edit"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Service By Id",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{protocol}}{{basepath}}/services/get/1",
-							"host": [
-								"{{protocol}}{{basepath}}"
-							],
-							"path": [
-								"services",
-								"get",
-								"1"
-							],
-							"query": [
-								{
-									"key": "",
-									"value": null,
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Service List By Id",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{protocol}}{{basepath}}/services/list/1",
-							"host": [
-								"{{protocol}}{{basepath}}"
-							],
-							"path": [
-								"services",
-								"list",
-								"1"
-							],
-							"query": [
-								{
-									"key": "",
-									"value": null,
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				}
-			]
-		},
-		{
-			"name": "Project",
-			"item": [
-				{
-					"name": "Create Project",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"projectName\": \"API call service name\",\r\n    \"projectDescription\": \"1\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{basepath}}/project/create",
-							"host": [
-								"{{protocol}}{{basepath}}"
-							],
-							"path": [
-								"project",
-								"create"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Project By Id",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{protocol}}{{basepath}}/project/get/1",
-							"host": [
-								"{{protocol}}{{basepath}}"
-							],
-							"path": [
-								"project",
-								"get",
-								"1"
-							],
-							"query": [
-								{
-									"key": "",
-									"value": null,
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get ProjectList By Id",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{protocol}}{{basepath}}/project/list/1",
-							"host": [
-								"{{protocol}}{{basepath}}"
-							],
-							"path": [
-								"project",
-								"list",
-								"1"
-							],
-							"query": [
-								{
-									"key": "",
-									"value": null,
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				}
-			]
-		},
-		{
-			"name": "API",
-			"item": [
-				{
-					"name": "Create External API",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"serviceId\": \"API call service name\",\r\n    \"apiName\": \"1\",\r\n    \"apiMethod\": \"POST\",\r\n    \"apiUrl\": \"http://localhost:9090\",\r\n    \"apiBody\": \"JSON\",\r\n    \"apiHeader\": \"1\",\r\n    \"apiQueryParam\": \"API call service name\",\r\n    \"apiAuth\": \"API KEY\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{basepath}}/api/create",
-							"host": [
-								"{{protocol}}{{basepath}}"
-							],
-							"path": [
-								"api",
-								"create"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get API By Id",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{protocol}}{{basepath}}/api/get/1",
-							"host": [
-								"{{protocol}}{{basepath}}"
-							],
-							"path": [
-								"api",
-								"get",
-								"1"
-							],
-							"query": [
-								{
-									"key": "",
-									"value": null,
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get API List By Id",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{protocol}}{{basepath}}/api/list/1",
-							"host": [
-								"{{protocol}}{{basepath}}"
-							],
-							"path": [
-								"api",
-								"list",
-								"1"
-							],
-							"query": [
-								{
-									"key": "",
-									"value": null,
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Edit API request",
-					"request": {
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": \"1\",\r\n    \"apiName\": \"API call service name\",\r\n    \"apiMethod\": \"POST\",\r\n    \"apiUrl\": \"http://localhost:9090\",\r\n    \"apiBody\": \"JSON\",\r\n    \"apiHeader\": \"1\",\r\n    \"apiQueryParam\": \"API call service name\",\r\n    \"apiAuth\": \"API KEY\"\r\n}",
+							"raw": "{\n    \"user_id\": 0,\n    \"role\":\"\",\n    \"projects_id\":[]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -641,15 +505,503 @@
 							}
 						},
 						"url": {
-							"raw": "{{protocol}}{{basepath}}/api/edit",
+							"raw": "{{Protocol}}{{Basepath}}/account/update-member",
 							"host": [
-								"{{protocol}}{{basepath}}"
+								"{{Protocol}}{{Basepath}}"
+							],
+							"path": [
+								"account",
+								"update-member"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove-Member",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JwtAuthToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Protocol}}{{Basepath}}/account/remove-member/{id}",
+							"host": [
+								"{{Protocol}}{{Basepath}}"
+							],
+							"path": [
+								"account",
+								"remove-member",
+								"{id}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List-Members",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JwtAuthToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Protocol}}{{Basepath}}/account/list-member",
+							"host": [
+								"{{Protocol}}{{Basepath}}"
+							],
+							"path": [
+								"account",
+								"list-member"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List-Account-Projects",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JwtAuthToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Protocol}}{{Basepath}}/account/list-project",
+							"host": [
+								"{{Protocol}}{{Basepath}}"
+							],
+							"path": [
+								"account",
+								"list-project"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Project Controller",
+			"item": [
+				{
+					"name": "Create-Project",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JwtAuthToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"project_name\":\"CD_Test\",\n    \"project_description\":\"This is my first Project testing\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Protocol}}{{Basepath}}/project/create",
+							"host": [
+								"{{Protocol}}{{Basepath}}"
+							],
+							"path": [
+								"project",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get-Project",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JwtAuthToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Protocol}}{{Basepath}}/project/get/{id}",
+							"host": [
+								"{{Protocol}}{{Basepath}}"
+							],
+							"path": [
+								"project",
+								"get",
+								"{id}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List-User-Projects",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JwtAuthToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Protocol}}{{Basepath}}/project/list",
+							"host": [
+								"{{Protocol}}{{Basepath}}"
+							],
+							"path": [
+								"project",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update-Project",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JwtAuthToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"project_id\": 131,\n    \"project_name\":null,\n    \"project_description\":\"Updated Description 2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Protocol}}{{Basepath}}/project/update",
+							"host": [
+								"{{Protocol}}{{Basepath}}"
+							],
+							"path": [
+								"project",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete-Project",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JwtAuthToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Protocol}}{{Basepath}}/account/delete/{id}",
+							"host": [
+								"{{Protocol}}{{Basepath}}"
+							],
+							"path": [
+								"account",
+								"delete",
+								"{id}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Service Controller",
+			"item": [
+				{
+					"name": "Create-Service",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JwtAuthToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"project_id\": 131,\n    \"service_name\":\"SendGird\",\n    \"base_url\":\"https://rapidprod-sendgrid-v1.p.rapidapi.com\",\n    \"base_url_live\":\"https://rapidprod-sendgrid-v1.p.rapidapi.com\",\n    \"is_live\":true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Protocol}}{{Basepath}}/services/create",
+							"host": [
+								"{{Protocol}}{{Basepath}}"
+							],
+							"path": [
+								"services",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get-Service",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Protocol}}{{Basepath}}/services/get/60",
+							"host": [
+								"{{Protocol}}{{Basepath}}"
+							],
+							"path": [
+								"services",
+								"get",
+								"60"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update-Service",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JwtAuthToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"service_id\": 0 ,\n    \"service_name\":\"\",\n    \"base_url\": \"\",\n    \"base_url_live\": \"\",\n    \"is_live\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Protocol}}{{Basepath}}/services/update",
+							"host": [
+								"{{Protocol}}{{Basepath}}"
+							],
+							"path": [
+								"services",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List-Service",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JwtAuthToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Protocol}}{{Basepath}}/services/list/{id}",
+							"host": [
+								"{{Protocol}}{{Basepath}}"
+							],
+							"path": [
+								"services",
+								"list",
+								"{id}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JwtAuthToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Protocol}}{{Basepath}}/delete/{id}",
+							"host": [
+								"{{Protocol}}{{Basepath}}"
+							],
+							"path": [
+								"delete",
+								"{id}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Api Controller",
+			"item": [
+				{
+					"name": "Create-Api",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JwtAuthToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"service_id\":84,\n    \"api_name\":\"getList\",\n    \"api_method\":\"GET\",\n    \"api_url\":\"/api/breeds/list/all\",\n    \"api_body\":null,\n    \"api_header\":{\n        \"content-type\":\"application/json\"\n    },\n    \"api_query_param\":null,\n    \"api_auth\":{\n        \"auth_type\":\"NOAUTH\",\n        \"auth_in\":\"\",\n        \"key\":\"\",\n        \"value\":\"\",\n        \"username\":\"\",\n        \"password\":\"\",\n        \"token\":\"\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Protocol}}{{Basepath}}/api/create",
+							"host": [
+								"{{Protocol}}{{Basepath}}"
 							],
 							"path": [
 								"api",
-								"edit"
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get-Api",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JwtAuthToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Protocol}}{{Basepath}}/api/get/{id}",
+							"host": [
+								"{{Protocol}}{{Basepath}}"
+							],
+							"path": [
+								"api",
+								"get",
+								"{id}"
 							],
 							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								},
 								{
 									"key": "",
 									"value": null,
@@ -661,13 +1013,52 @@
 					"response": []
 				},
 				{
-					"name": "Delete API By ID",
+					"name": "List-Api",
 					"request": {
-						"method": "DELETE",
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JwtAuthToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Protocol}}{{Basepath}}/api/list/{{serviceId}}",
+							"host": [
+								"{{Protocol}}{{Basepath}}"
+							],
+							"path": [
+								"api",
+								"list",
+								"{{serviceId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update-Api",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JwtAuthToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": \"1\",\r\n    \"apiName\": \"API call service name\",\r\n    \"apiMethod\": \"POST\",\r\n    \"apiUrl\": \"http://localhost:9090\",\r\n    \"apiBody\": \"JSON\",\r\n    \"apiHeader\": \"1\",\r\n    \"apiQueryParam\": \"API call service name\",\r\n    \"apiAuth\": \"API KEY\"\r\n}",
+							"raw": "{\n    \"id\": ,\n    \"api_name\":\"\",\n    \"api_method\":\"\",\n    \"api_url\":\"\",\n    \"api_auth\":{\n\n    },\n    \"api_body\":{\n\n    },\n    \"api_header\":{\n\n    },\n    \"api_query_param\":{\n\n    },\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -675,77 +1066,85 @@
 							}
 						},
 						"url": {
-							"raw": "{{protocol}}{{basepath}}/api/delete/1",
+							"raw": "{{Protocol}}{{Basepath}}/api/update",
 							"host": [
-								"{{protocol}}{{basepath}}"
+								"{{Protocol}}{{Basepath}}"
+							],
+							"path": [
+								"api",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete-Api",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JwtAuthToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Protocol}}{{Basepath}}/api/delete/{id}",
+							"host": [
+								"{{Protocol}}{{Basepath}}"
 							],
 							"path": [
 								"api",
 								"delete",
-								"1"
-							],
-							"query": [
+								"{id}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validate-Api",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
 								{
-									"key": "",
-									"value": null,
-									"disabled": true
+									"key": "token",
+									"value": "{{JwtAuthToken}}",
+									"type": "string"
 								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"api_id\": 81,\n    \"data\":{\n        \"body_object\":null,\n\n        \"header_pairs\":{\n            \"Accept\": \"application/json\"\n        },\n        \"query_param\":{\n            \"api_key\": \"fabe-9468-ec5e-0cab\"\n        }\n\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Protocol}}{{Basepath}}/api/test",
+							"host": [
+								"{{Protocol}}{{Basepath}}"
+							],
+							"path": [
+								"api",
+								"test"
 							]
 						}
 					},
 					"response": []
 				}
-			],
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				}
 			]
-		}
-	],
-	"auth": {
-		"type": "bearer",
-		"bearer": [
-			{
-				"key": "token",
-				"value": "{{AuthToken}}",
-				"type": "string"
-			}
-		]
-	},
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
 		}
 	]
 }
