@@ -121,7 +121,7 @@ public class MailService {
 			Map<String, String> model = new HashMap<>();
 			model.put("logoUrl", appLogo);
 			model.put("name", user.getUserEmail());
-			model.put("url", appUrl + "/user/password?token=" + token.getToken());
+			model.put("url", "http://localhost:3000/resetpassword?token=" + token.getToken());
 
 			mail.setModel(model);
 
