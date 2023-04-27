@@ -16,10 +16,10 @@ import lombok.ToString;
 @ToString
 public class UpdateProjectRequest {
 
-	@NotNull(message = "Project id should not blank !!")
+	@NotNull(message = "project_id should not blank !!")
 	private Long projectId;
 
-	@Pattern(regexp = "^[a-zA-Z]([a-zA-Z0-9_-])+$", message = "Project name should start with alpgabets and only be in AlphaNumeric with Underscore and numbers ")
+	@Pattern(regexp = "^[a-zA-Z]([a-zA-Z0-9_- ])+$", message = "Project name should start with alpgabets and only be in AlphaNumeric with Underscore and numbers ")
 	private String projectName;
 
 	private String projectDescription;

@@ -18,7 +18,7 @@ import lombok.ToString;
 @ToString
 public class UpdateApiRequest {
 
-	@NotNull
+	@NotNull(message = "api_id should not blank !!")
 	private Long id;
 
 	private String apiName;

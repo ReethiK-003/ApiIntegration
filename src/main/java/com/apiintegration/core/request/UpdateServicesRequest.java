@@ -2,6 +2,7 @@ package com.apiintegration.core.request;
 
 import java.net.URI;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -16,7 +17,7 @@ import lombok.ToString;
 @ToString
 public class UpdateServicesRequest {
 
-	@NotBlank
+	@NotNull(message = "service_id should not blank !!")
 	private Long serviceId;
 
 	private String serviceName;
