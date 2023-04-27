@@ -121,7 +121,7 @@ public class MailService {
 			Map<String, String> model = new HashMap<>();
 			model.put("logoUrl", appLogo);
 			model.put("name", user.getUserEmail());
-			model.put("url", appUrl + "/user/password?token=" + token.getToken());
+			model.put("url", appUrl + "/user/reset-password?token=" + token.getToken());
 
 			mail.setModel(model);
 
@@ -129,7 +129,7 @@ public class MailService {
 
 			log.debug("Reset-password mail sent to {}", user.getUserEmail());
 		} catch (Exception e) {
-			log.error("Error processing SendTwoFactorEmailEvent!", e);
+			log.error("Error processing Reset-password mail !", e);
 		}
 	}
 
