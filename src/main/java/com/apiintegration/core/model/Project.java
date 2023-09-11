@@ -1,6 +1,9 @@
 package com.apiintegration.core.model;
 
 import java.sql.Timestamp;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,10 +12,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Version;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -36,9 +42,13 @@ public class Project {
 	private String projectCode;
 
 	@JsonBackReference
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "account_id")
 	private Account account;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	private Set<RelUserProject> projects = new LinkedHashSet<>();
 
 	@CreationTimestamp
 	private Timestamp createdAt;
@@ -48,10 +58,9 @@ public class Project {
 
 	@Version
 	private Long version;
-
-//	@ToString.Exclude
-//	@JsonManagedReference
-//	@OneToMany(mappedBy = "project")
-//	private Set<RelUserProject> userProjects = new LinkedHashSet<>();
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	private Set<Services> services = new LinkedHashSet<>();
 
 }

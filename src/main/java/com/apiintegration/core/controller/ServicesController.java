@@ -68,7 +68,7 @@ public class ServicesController {
 		try {
 			Services service = servicesService.getServices(servicesId);
 
-			return new DataResponse(service, "Service Modified Successfully !!", getRequestPath(servletRequest), 200);
+			return new DataResponse(service, "Service Fetched Successfully !!", getRequestPath(servletRequest), 200);
 		} catch (Exception e) {
 			return new BasicResponse(e.getMessage(), getRequestPath(servletRequest), 400);
 		}

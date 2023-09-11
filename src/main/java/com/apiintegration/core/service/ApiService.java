@@ -10,21 +10,31 @@ import java.util.function.Consumer;
 import javax.el.MethodNotFoundException;
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import com.apiintegration.core.exception.NoDataFoundException;
 import com.apiintegration.core.model.Api;
+import com.apiintegration.core.model.ApiLogs;
 import com.apiintegration.core.model.Services;
+import com.apiintegration.core.model.User;
+import com.apiintegration.core.repo.ApiLogsRepo;
 import com.apiintegration.core.repo.ApiRepo;
+import com.apiintegration.core.request.ApiLogsRequest;
 import com.apiintegration.core.request.CreateApiRequest;
 import com.apiintegration.core.request.TestApiRequest;
 import com.apiintegration.core.request.UpdateApiRequest;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import com.apiintegration.core.utils.APIDataObject;
 import com.apiintegration.core.utils.ApiResponseObject;
@@ -41,12 +51,16 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import javassist.NotFoundException;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ApiService {
 
 	private final ApiRepo apiRepo;
 
+	private final ApiLogsRepo apiLogsRepo;
+
+	@Transactional
 	public Api createApi(@Valid CreateApiRequest request, Services service)
 			throws JsonMappingException, JsonProcessingException {
 
@@ -75,6 +89,9 @@ public class ApiService {
 
 		api.setApiHeaderPairs(headers);
 		api.setApiQueryParam(queryParam);
+
+		log.info("New API created inside {} Project inside {} Service with name {} ",
+				api.getServices().getProject().getProjectName(), api.getServices().getServiceName(), api.getApiName());
 
 		return save(api);
 	}
@@ -108,17 +125,25 @@ public class ApiService {
 		if (request.getApiQueryParam() != null) {
 			api.setApiQueryParam(queryParam);
 		}
+
+		log.info("API Updated inside {} Project inside {} Service with name {} ",
+				api.getServices().getProject().getProjectName(), api.getServices().getServiceName(), api.getApiName());
+
 		return save(api);
 	}
 
+	@Transactional
 	public void deleteApi(Long apiId) {
 		Api api = getApi(apiId);
 		apiRepo.delete(api);
+		log.info("API deleted :{}", api);
 	}
 
+	@Transactional
 	public void deleteAllApiByService(Services services) {
 		List<Api> apis = getApisByServices(services);
 		apiRepo.deleteInBatch(apis);
+		log.info("All API in Service {} deleted :", services);
 	}
 
 	private HashMap<String, String> composeAndAddHeaders(Auth auth, HashMap<String, String> headers) {
@@ -145,7 +170,7 @@ public class ApiService {
 		}
 	}
 
-	public ApiResponseObject processAndFetchApiResponse(TestApiRequest request) throws NotFoundException {
+	public ApiResponseObject processAndFetchApiResponse(TestApiRequest request, User user) throws NotFoundException {
 
 		Api api = getApi(request.getApiId());
 		Services services = api.getServices();
@@ -179,7 +204,9 @@ public class ApiService {
 			if (response != null) {
 				ApiResponseObject responseObject = new ApiResponseObject(composedurl, response.getBody(),
 						response.getHeaders(), response.getStatusCodeValue());
-
+				
+				saveApiLogs(api, requestObject, responseObject, user);
+				
 				return responseObject;
 			} else {
 				throw new RuntimeException("Error Occured while Performing API test action !!");
@@ -187,6 +214,9 @@ public class ApiService {
 		} catch (WebClientResponseException ex) {
 			ApiResponseObject responseObject = new ApiResponseObject(composedurl, ex.getResponseBodyAsString(),
 					ex.getHeaders(), ex.getRawStatusCode());
+			
+			saveApiLogs(api, requestObject, responseObject, user);
+			
 			return responseObject;
 		}
 	}
@@ -224,6 +254,50 @@ public class ApiService {
 		return headers -> {
 			request.forEach((key, value) -> headers.add(key, value));
 		};
+	}
+
+	private void saveApiLogs(Api api, APIDataObject apiRequestData, ApiResponseObject apiResponseObject, User user) {
+
+		ApiLogs apiLog = new ApiLogs();
+
+		apiLog.setApi(api);
+		apiLog.setRequestData(apiRequestData);
+		apiLog.setResponseData(apiResponseObject);
+		apiLog.setStatus(apiResponseObject.getStatus());
+		apiLog.setUser(user);
+
+		apiLogsRepo.save(apiLog);
+	}
+
+	public Page<ApiLogs> getApiLogs(ApiLogsRequest request) {
+
+		Pageable pageable = null;
+		Sort sort = null;
+		if (request.getPageNo() != null && request.getPageSize() != null) {
+			pageable = PageRequest.of(request.getPageNo() - 1, request.getPageSize());
+		}
+		if (request.getPageNo() == null && request.getPageSize() == null) {
+			//Default Page Number = 1 and Size = 10 is applied.
+			pageable = PageRequest.of(0 , 10);
+		}
+		if (request.getOrder() != null && request.getField() != null && request.getPageNo() != null
+				&& request.getPageSize() != null) {
+
+			if (request.getOrder() != null && "asc".equalsIgnoreCase(request.getOrder())) {
+				sort = Sort.by(request.getField()).ascending();
+			} else {
+				sort = Sort.by(request.getField()).descending();
+			}
+			pageable = PageRequest.of(request.getPageNo() - 1, request.getPageSize(), sort);
+		}
+
+		if (request.getApiId() != null) {
+			Api api = getApi(request.getApiId());
+			return apiLogsRepo.getAllByApi(api, pageable);
+		} else {
+			return apiLogsRepo.findAll(pageable);
+		}
+
 	}
 
 	public Api getApi(Long id) {

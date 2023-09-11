@@ -1,6 +1,8 @@
 package com.apiintegration.core.model;
 
 import java.sql.Timestamp;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -28,7 +30,7 @@ public class RelUserProject {
 	private Long id;
 
 	@JsonBackReference
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
 	@JoinColumn(name = "user_id")
 	private User user;
 
@@ -40,7 +42,7 @@ public class RelUserProject {
 	private Timestamp createdAt;
 
 	@JsonManagedReference
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	@JoinColumn(name = "created_by")
 	private User createdUser;
 }

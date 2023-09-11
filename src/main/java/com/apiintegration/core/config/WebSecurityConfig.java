@@ -66,6 +66,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				// Authenticate Control for Role 'USER'.
 				.antMatchers("/account/create", "/account/join/**").hasRole(UserRole.USER)
 
+				// Authenticate Control for Role 'OWNER'.
 				.antMatchers("/account/delete", "/account/confirm-delete/{token}").hasRole(UserRole.OWNER)
 
 				// Authenticate Control for Role 'LEAD'.

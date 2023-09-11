@@ -15,13 +15,14 @@ import com.apiintegration.core.request.UpdateServicesRequest;
 
 import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ServicesService {
 
 	private final ServicesRepo servicesRepo;
-	private final ApiService apiService;
 
 	@Transactional
 	public Services createNewService(CreateServicesRequest request, Project project)
@@ -36,9 +37,12 @@ public class ServicesService {
 			service.setServiceBaseUrlLive(request.getBaseUrlLive().toString());
 			service.setEnvLive(request.isLive());
 
+			log.info("New Service created as {} inside Project {}", service.getServiceName(), project.getProjectName());
 			return save(service);
-		}
+		}else {
+			log.debug("Service creation failed");
 		throw new DuplicateEntryException("Service with name already created try with new name");
+		}
 	}
 
 	public Services updateService(UpdateServicesRequest request) throws NotFoundException {
@@ -55,13 +59,16 @@ public class ServicesService {
 			service.setServiceBaseUrlLive(baseUrlLive);
 			service.setEnvLive(request.isLive());
 
+			log.info("Service updated {}", service);
 			return save(service);
 		}
 		throw new DuplicateEntryException("Service not found !!");
 	}
 
+	@Transactional
 	public void deleteServiceAndSanitize(Services services) {
-		apiService.deleteAllApiByService(services);
+
+		log.info("Service and its Associations Deleted : {}", services);
 		servicesRepo.delete(services);
 	}
 

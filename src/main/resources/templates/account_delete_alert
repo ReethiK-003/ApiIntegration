@@ -1,0 +1,36 @@
+<table border="0" style="border-collapse: collapse; width: 100%;">
+	<tbody>
+		<!-- Header -->
+		<tr align="center">
+			<td bgcolor="#0009E1" style="padding: 20px 30px 5px 30px;">
+				<img src="${logoUrl}" alt="API Integrations Logo" width="220" />
+			</td>
+		</tr>
+<!-- Body --> 
+		<tr align="center">
+			<td style="width: 100%;">
+				<br />
+				<h2>
+					<b>
+						 Hi ${name},
+					</b>
+				</h2>
+				<p style="line-height: 26px;">
+					Alert !! your Team has recently requested to delete Account on APIIntegrations.
+					<br />
+					You will be removed from current Account and Your data in it will be lost,
+					<br />
+					Still you can Create a New Account with same emailId or Join on Other Accounts.
+					<br />
+				</p?
+			</td>
+		</tr>
+<!-- Footer -->
+		<tr align="center">
+			<td bgcolor="#e0e0e0" style="padding: 30px 30px 30px 30px;" width="100%">
+				Thank You !!
+			</td>
+		</tr>
+	</tbody>
+</table>
+

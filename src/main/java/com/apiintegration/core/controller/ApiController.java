@@ -5,17 +5,22 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.apiintegration.core.model.Api;
+import com.apiintegration.core.model.ApiLogs;
 import com.apiintegration.core.model.Services;
+import com.apiintegration.core.model.User;
+import com.apiintegration.core.request.ApiLogsRequest;
 import com.apiintegration.core.request.CreateApiRequest;
 import com.apiintegration.core.request.TestApiRequest;
 import com.apiintegration.core.request.UpdateApiRequest;
@@ -99,22 +104,34 @@ public class ApiController {
 	}
 
 	@PostMapping("/test")
-	public IResponse testApi(@Valid @RequestBody TestApiRequest request) {
+	public IResponse testApi(@Valid @RequestBody TestApiRequest request, @RequestAttribute User user, HttpServletRequest servletRequest) {
 
 		try {
 			APIDataObject requestObject = request.getData();
 
-			ApiResponseObject responseObject = apiService.processAndFetchApiResponse(request);
+			ApiResponseObject responseObject = apiService.processAndFetchApiResponse(request , user);
 
 			// need to create methods for saving API response in logs.
 
-			return new ApiResponse(requestObject, responseObject, "/api/test", 200);
+			return new ApiResponse(requestObject, responseObject, getRequestPath(servletRequest), 200);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new BasicResponse("Failed to validate !!", "/api/test", 400);
+			return new BasicResponse("Failed to validate !!", getRequestPath(servletRequest), 400);
 		}
 	}
 
+	@PostMapping("/logs")
+	public IResponse getApiLogs(@RequestBody ApiLogsRequest request,HttpServletRequest servletRequest) {
+		
+		try {
+			Page<ApiLogs> data = apiService.getApiLogs(request);
+			
+			return new DataResponse( data, "Successfully fetched API logs !!", getRequestPath(servletRequest), 200);
+		}catch(Exception e) {
+			return new BasicResponse("Failed to get Api logs !!", getRequestPath(servletRequest), 400);
+		}
+	}
+	
 	private String getRequestPath(HttpServletRequest request) {
 		return request.getRequestURL().toString();
 	}

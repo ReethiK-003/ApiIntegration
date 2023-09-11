@@ -62,8 +62,9 @@ public class UserService implements UserDetailsService {
 		user.setUserRole(UserRole.USER);
 		User savedUser = save(user);
 
+		log.info("New User Registered {}", user.getUserEmail());
+		
 		sendEmailVerifyMail(savedUser);
-
 		return user;
 	}
 
@@ -75,6 +76,7 @@ public class UserService implements UserDetailsService {
 		save(user);
 		try {
 			mailService.send2faMail(user, token);
+			log.info("Login 2FA User: {}",user.getUserEmail());
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to send 2FA code for User with exception : ", e);
 		}
@@ -136,6 +138,7 @@ public class UserService implements UserDetailsService {
 			if (!user.getVerifiedEmail()) {
 				user.setVerifiedEmail(Boolean.TRUE);
 				save(user);
+				log.info("User email Verification completed :{}", user.getUserEmail());
 			}
 			tokenService.expireToken(token);
 		}
@@ -161,43 +164,46 @@ public class UserService implements UserDetailsService {
 	public boolean forgotPasswordRequest(String email) {
 		try {
 			User user = getUserByEmail(email);
-			user.setUserPassword(null);
 			Token token = tokenService.createResetPasswordToken(user);
 			mailService.sendResetPasswordMail(token, user);
 			user.addToken(token);
 			save(user);
+			log.info("Reset password requested by user :{}", email);
 			return true;
 		} catch (Exception e) {
 			log.debug("Failed to process reset-password request for email{}", email);
 			return false;
 		}
 	}
-
+	
+	@Transactional
 	public User resetPassword(ResetPasswordRequest request) {
 		try {
 			Token token = tokenService.findByTokenAndType(request.getToken(), TokenTypes.RESET_PASSWORD);
 			User user = token.getUser();
-
 			user.setUserPassword(passwordEncoder.encode(request.getPassword()));
 			user.createAndSetNewSession();
 			token.expireNow();
 			save(user);
+			log.info("Password changed by User {} using reset token{}", user.getUserEmail(), token.getToken());
 			return user;
 		} catch (Exception e) {
 			throw new DuplicateEntryException(e.getMessage());
 		}
 	}
 
+	@Transactional
 	public User changePassword(ChangePasswordRequest request, User user) throws UserNotFoundException {
 		try {
 			User newUser = getUserByEmail(user.getUserEmail());
 			if (passwordEncoder.matches(request.getCurrentPassword(), newUser.getUserPassword())) {
 				newUser.setUserPassword(passwordEncoder.encode(request.getNewPassword()));
 				newUser.createAndSetNewSession();
-
+				log.info("Password changed for user: {}", user.getUserEmail());
 				return save(newUser);
-			}
+			}else {
 			throw new AccessDeniedException("Invalid password try again !!");
+			}
 		} catch (Exception e) {
 			throw new UserNotFoundException();
 		}

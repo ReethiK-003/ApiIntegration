@@ -60,7 +60,8 @@ public class UserController {
 			userService.saveUserVisit(newUser, new UserVisits(servletRequest.getHeader("X-Forwarded-For"),
 					servletRequest.getHeader("user-agent")));
 
-			return generateBasicResponseWithToken(newUser, "User created successfully !!", getRequestPath(servletRequest));
+			return generateBasicResponseWithToken(newUser, "User created successfully !!",
+					getRequestPath(servletRequest));
 		} catch (Exception e) {
 			return generateBasicErrorResponse(e.getMessage(), getRequestPath(servletRequest));
 		}
@@ -72,6 +73,9 @@ public class UserController {
 		try {
 			User user = userService.getUserByEmail(loginRequest.getEmail());
 
+			if (!user.getVerifiedEmail()) {
+				return generateBasicErrorResponse("Verify Your EmailId to Login !!", getRequestPath(servletRequest));
+			}
 			if (userService.validatePassword(loginRequest.getPassword(), user.getUserPassword())) {
 
 				userService.generate2FAForUser(user);
@@ -139,12 +143,17 @@ public class UserController {
 	@PostMapping("/forgot-password")
 	public IResponse forgotPassword(@Valid @RequestBody ForgotPasswordRequest request,
 			HttpServletRequest servletRequest) {
-
-		if (userService.forgotPasswordRequest(request.getEmail())) {
-
-			return generateBasicResponse("Reset password link sent succesfully !!", getRequestPath(servletRequest));
+		
+		try {
+			User user = userService.getUserByEmail(request.getEmail());
+			if (user != null) {
+				userService.forgotPasswordRequest(user.getUserEmail());
+				return generateBasicResponse("Reset password link sent succesfully !!", getRequestPath(servletRequest));
+			}
+			return generateBasicErrorResponse("Failed to send Reset-password !!", getRequestPath(servletRequest));
+		} catch (Exception e) {
+			return generateBasicErrorResponse(e.getMessage(), getRequestPath(servletRequest));
 		}
-		return generateBasicErrorResponse("Failed to send Reset-password !!", getRequestPath(servletRequest));
 	}
 
 	@PostMapping("/reset-password")

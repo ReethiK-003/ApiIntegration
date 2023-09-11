@@ -71,7 +71,7 @@ public class AccountController {
 	public IResponse deleteAccount(@RequestAttribute User user, HttpServletRequest servletRequest) {
 
 		try {
-			accountService.deleteAccountRequest(user.getAccount());
+			accountService.deleteAccountRequest(user);
 			return new BasicResponse("Success !!", getRequestPath(servletRequest), 200);
 		} catch (Exception e) {
 			return new BasicResponse(e.getMessage(), getRequestPath(servletRequest), 400);
@@ -108,7 +108,7 @@ public class AccountController {
 
 		try {
 			Account account = accountService.validateAndJoinUser(request, user);
-			return new DataResponse(account, "Succesfully Created Account !!", getRequestPath(servletRequest), 200);
+			return new DataResponse(account, "Succesfully Joined Account !!", getRequestPath(servletRequest), 200);
 		} catch (Exception e) {
 			return new BasicResponse(e.getMessage(), getRequestPath(servletRequest), 400);
 		}

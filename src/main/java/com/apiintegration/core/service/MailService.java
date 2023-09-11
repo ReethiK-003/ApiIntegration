@@ -3,6 +3,9 @@ package com.apiintegration.core.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -121,7 +124,7 @@ public class MailService {
 			Map<String, String> model = new HashMap<>();
 			model.put("logoUrl", appLogo);
 			model.put("name", user.getUserEmail());
-			model.put("url", "http://localhost:3000/resetpassword?token=" + token.getToken());
+			model.put("url", appUrl + "/resetpassword?token=" + token.getToken());
 
 			mail.setModel(model);
 
@@ -133,6 +136,7 @@ public class MailService {
 		}
 	}
 
+	@Transactional
 	public void sendAccountDeleteRemainderMail(Account account, List<User> usersList, Token token) {
 		try {
 
@@ -148,7 +152,7 @@ public class MailService {
 			Map<String, String> model = new HashMap<>();
 			model.put("logoUrl", appLogo);
 			model.put("name", account.getUser().getUserFullName());
-			model.put("token", token.getData());
+			model.put("url", appUrl + "/deleteaccount?token="+ token.getData());
 
 			mail.setModel(model);
 

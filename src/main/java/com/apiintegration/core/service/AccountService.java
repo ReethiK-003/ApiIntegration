@@ -51,6 +51,7 @@ public class AccountService {
 
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
+	@Transactional
 	public Account createNewAccount(CreateAccountRequest request, User user)
 			throws MethodNotSupportedException, NotFoundException {
 		if (user.getAccount() != null) {
@@ -65,9 +66,13 @@ public class AccountService {
 			account.setUsersCount(1L);
 
 			accountRepo.save(account);
-
+			
+			log.info("New Account created with name {}, by {}", account.getAccountName() , user.getUserEmail());
+			
 			return setAccountToUser(account).getAccount();
 		} else {
+			log.debug("Account creation failed for user : {} ", user);
+			
 			throw new DuplicateEntryException("Account with name already exists please try again with new name.");
 		}
 	}
@@ -79,6 +84,8 @@ public class AccountService {
 		Optional.ofNullable(request.getAccountName()).ifPresent(account::setAccountName);
 		Optional.ofNullable(request.getAccountDescription()).ifPresent(account::setAccountDescription);
 
+		log.info("Account updated : {}", account);
+		
 		return save(account);
 
 	}
@@ -104,7 +111,6 @@ public class AccountService {
 		return true;
 	}
 
-	@Transactional
 	public Account validateAndJoinUser(String req, User user)
 			throws JsonMappingException, JsonProcessingException, NotFoundException, InvalidTokenException {
 
@@ -135,8 +141,10 @@ public class AccountService {
 				user.setUserRole(tokenData.getRole());
 
 				user = userService.addProjects(user, projects, token.getUser());
+				
 				log.debug("New member joined the account with email :{} as role :{} in {}", user.getUserEmail(),
 						user.getUserRole(), account.getAccountName());
+				
 				return userService.save(user);
 			} else {
 				throw new InvalidTokenException(
@@ -147,6 +155,7 @@ public class AccountService {
 		}
 	}
 
+	@Transactional
 	public User updateUser(UpdateUserRequest request, User mainUser)
 			throws NotFoundException, DuplicateEntryException, InvalidOperationException {
 		User user = userService.getUserById(request.getUserId());
@@ -211,13 +220,20 @@ public class AccountService {
 		return save(account);
 	}
 
-	public void deleteAccountRequest(Account account) throws NotFoundException {
+	@Transactional
+	public void deleteAccountRequest(User user) throws NotFoundException {
 
+		Account account = user.getAccount();
 		List<User> usersList = userService.getAllUsers(account);
-		Token token = tokenService.createDeleteAccountToken(account.getUser());
+		Token token = tokenService.createDeleteAccountToken(user);
+		user.addToken(token);
+		userService.save(user);
+		
+		log.info("Account Delete Requested.");
 		mailService.sendAccountDeleteRemainderMail(account, usersList, token);
 	}
 
+	@Transactional
 	public void deleteAccountAndSanitize(String tData) {
 		Token token = tokenService.findByTokenAndType(tData, TokenTypes.DELETE_ACCOUNT);
 		if (token != null) {
@@ -231,10 +247,8 @@ public class AccountService {
 
 				userService.save(user);
 			}
-
-			projectService.deleteAllProjectByAccount(account);
-
 			accountRepo.delete(account);
+			log.info("Account and its Associations Deleted and Users seperated :{}", account);
 		}
 	}
 
